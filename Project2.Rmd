@@ -14,12 +14,14 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a task we found on https://www.kaggle.com. This task provided a dataset which in the original form should be used to predict 
 
 ```{r cars}
-summary(cars)
+install.packages("wordcloud") # word-cloud generator
+install.packages("RColorBrewer") # color palettes
+
+require("wordcloud")
+library("RColorBrewer")
+
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
