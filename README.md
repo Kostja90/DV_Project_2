@@ -1,4 +1,4 @@
 # DV_Project_2
 Data Visualisation Project Beuth Hochschule für Technik Berlin 
 
-This is a line from RStudio 
+# A instruction how to use Git with R Studio use this link http://happygitwithr.com/rstudio-git-github.html
