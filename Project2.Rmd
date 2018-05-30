@@ -11,7 +11,7 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 ```
 
 ## Data introduction
-As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a task we found on https://www.kaggle.com. This task provided a dataset which in the original form should be used to predict 
+As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a task we found on https://www.kaggle.com. This task provided a dataset which in the original form should be used to predict. Also a good data set https://www.sajari.com/public-data
 
 ```{r cars}
 install.packages("wordcloud") # word-cloud generator
