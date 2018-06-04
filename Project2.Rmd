@@ -103,6 +103,73 @@ wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(1,0.35),
 ```
 
 
+```{r}
+
+aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
+unique(tracksPerYear$artistName)
+
+as.character(tracksPerYear$artistName)
+
+summary(table(tracksPerYear$Year,as.character(tracksPerYear$artistName)))
+
+aggregate(tracksPerYear$Year, list(name = as.character(tracksPerYear$artistName)), sum)
+
+plot(tracksPerYear$Year,tracksPerYear$artistName)
+text(tracksPerYear$Year,tracksPerYear$artistName, labels = tracksPerYear$artistName)
+
+with(tracksPerYear, text(sr~dpi, labels = row.names(LifeCycleSavings[1:9,]), pos = 4))
+
+labels(tracksPerYear$artistName)
+
+plot(tracksPerYear$artistName)
+
+plot(tracksPerYear$Year[tracksPerYear$Year>2000],tracksPerYear$artistName[tracksPerYear$Year>2000])
+
+```
+```{r}
+# install.packages('rworldmap')
+library(rworldmap)
+newmap <- getMap(resolution = "low")
+
+plot.new()
+plot(newmap, xlim = c(-180, 180), ylim = c(-100, 100), asp = 1)
+par(new = TRUE)
+
+summary(newmap)
+plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
+
+plot.new()
+plot(lon, lat, col = "red", cex = .3, add = TRUE)
+
+plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
+points(lat)
+
+range(as.numeric(location$lon))
+sort(location$lon)
+[c(1,length(location$lon))]
+
+lon <- as.double(as.character(location$lon))
+lat <- as.double(as.character(location$lat))
+
+lon <- lon[!is.na(lon)]
+lat <- lat[!is.na(lat)]
+
+length(lat)
+length(lon)
+
+as.numeric(lat)
+
+
+typeof(lon)
+
+as.double(location$lon)
+unlist(lapply(location$lon, is.double))  
+location$lon[is.integer(location$lon)]
+location$lat[is.integer(location$lat)]
+typeof(location$lat)
+
+```
+
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
