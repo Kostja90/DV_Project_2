@@ -14,20 +14,92 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis the dataset contains also some Metadata, like Author, produced year etc. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com). As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). 
 
 ## Handle the downloaded data
-After downloading and unzipping the data, one can see two different dolders, one 'data' containing several other folders 'A' and 'B' which contain songfiles in HDF5 (Hirarchical Data Format 5) format. This is a format that is still used in scientific applications and using and more saving big datasets.
+After downloading and unzipping the data, one can see two different dolders, one 'data' containing several other folders 'A' and 'B' which contain songfiles in HDF5 (Hirarchical Data Format 5) format. This is a format that is still used in scientific applications and using and more saving big datasets. For Our purposes we only will use the dataset with the metadata all HDF5 file we will not consider anymore. 
 
+
+## Preprocess the Data 
+
+first one has to remove teh Seperators <SEP> and replace those with a common seperator like ';' because R is used to a one byte seperator and therefor it is not possible to do so in R itself.
 ```{r import}
-#install.packages("wordcloud") # word-cloud generator
+location <- read.csv2('data/subset_artist_location.txt',sep = ';', header = FALSE, col.names = c('artistId', 'lat','lon',  'trackID', 'artistName'))
+
+artists <- read.csv2('data/subset_unique_artists.txt',sep = ';', header = FALSE, col.names = c('artistId', 'V2', 'trackID', 'artistName'))
+
+tags <- read.csv2('data/subset_unique_mbtags.txt',sep = ';', header = FALSE, col.names = c('tags'))
+
+uni_terms <- read.table('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
+
+tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, col.names = c('trackID','V2', 'artistName','songName'))
+
+tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
+
+```
+
+```{r pressure, echo=TRUE}
+# Install
+#install.packages("tm")  # for text mining
+#install.packages("SnowballC") # for text stemming
+#install.packages("wordcloud") # word-cloud generator 
 #install.packages("RColorBrewer") # color palettes
 
-require("wordcloud")
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
 library("RColorBrewer")
 
+
+docs <- Corpus(VectorSource(as.String(artists$artistName)))
+
+# Convert the text to lower case
+docs <- tm_map(docs, content_transformer(tolower))
+
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+
+# important for better plot 
+logFreq <- ceiling(log(d$freq)*4)
+
+wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(2,0.35),
+          max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "the")
+
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+
+wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale= c(2,0.35),
+          max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+
+```
+```{r}
+docs1 <- Corpus(VectorSource(as.String(tracks$songName)))
+
+# Convert the text to lower case
+docs1 <- tm_map(docs1, content_transformer(tolower))
+
+dtm <- TermDocumentMatrix(docs1)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+
+# important for better plot 
+logFreq <- ceiling(log(d$freq)*4)
+
+wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(1,0.35),
+          max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 ```
 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
