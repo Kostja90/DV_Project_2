@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/data')
+setwd('/Users/a.gogohia')
 ```
 
 
@@ -105,7 +105,7 @@ wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(1,0.35),
 
 ```{r}
 
-aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
+#aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
 unique(tracksPerYear$artistName)
 
 as.character(tracksPerYear$artistName)
