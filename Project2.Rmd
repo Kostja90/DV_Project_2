@@ -2,7 +2,11 @@
 title: "Project 2"
 author: "Arthur Gogohia, Dion Refiano, Konstantin Shuxtelinsky"
 date: "26/05/2018"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    number_sections: false
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -10,66 +14,58 @@ knitr::opts_chunk$set(echo = TRUE)
 setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/data')
 ```
 
+# Introduction
+As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis, the dataset contains also some Metadata, like Author, produced year etc. and finally music data in HDF5 format. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com). As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). 
 
-## Data introduction
-As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis the dataset contains also some Metadata, like Author, produced year etc. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com). As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). 
+Our goal in this Project is going to be an analysis of some songfiles that we prefer. Since all of the musicfiles are labeled with artist- and songnames as well as the year of production,  we can  find allmost every song eather on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). First we are going to listen to some of the songs to find the ones that we prefer. Further, we are going to analyze that songs to have a good understanding of data that describes our preferation. Last we are going to predict some more songs that will be chosen randomly from the whole dataset. 
 
-## Handle the downloaded data
-After downloading and unzipping the data, one can see two different dolders, one 'data' containing several other folders 'A' and 'B' which contain songfiles in HDF5 (Hirarchical Data Format 5) format. This is a format that is still used in scientific applications and using and more saving big datasets. For Our purposes we only will use the dataset with the metadata all HDF5 file we will not consider anymore. 
+Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information. 
+
+# Handle the downloaded data
+After downloading and unzipping the data, one can see two different folders. The first one, 'data', containing several other folders (data files for tracks whose hashes begin with) 'A' and 'B' which contain songfiles in HDF5 (Hirarchical Data Format 5) format. This format is a general format used in science for big datasets. The provided files contain some analysis, some metadata and some more information that is stored on MusicBrainz (https://musicbrainz.org), an open music encyclopedia. The second folder named 'AdditionalFiles' contains different metadata as either text or db file. This data is going to be used for first hands on the whole dataset, to get to know the dataset since it is accessable really simple and prevent some general information about it. To read both datafolders one should install some additional packages that we will mention later on. 
+
+## Preprocess the Additional files
+
+When accessing the data provided in 'AdditionalFiles' folder, one has to remove the Seperators \<SEP\> and replace those with a common seperator like ';' because R is used to a one byte seperator and therefor it is not possible to read a file with seperator \<SEP\>.
+
+The following codechunk was only used to access the txt files and to load them into RStudio
 
 
-## Preprocess the Data 
-
-first one has to remove teh Seperators <SEP> and replace those with a common seperator like ';' because R is used to a one byte seperator and therefor it is not possible to do so in R itself.
-```{r import}
+```{r importShow , warning=FALSE, echo=TRUE}
 location <- read.csv2('data/subset_artist_location.txt',sep = ';', header = FALSE, col.names = c('artistId', 'lat','lon',  'trackID', 'artistName'))
 
 artists <- read.csv2('data/subset_unique_artists.txt',sep = ';', header = FALSE, col.names = c('artistId', 'V2', 'trackID', 'artistName'))
 
 tags <- read.csv2('data/subset_unique_mbtags.txt',sep = ';', header = FALSE, col.names = c('tags'))
 
-uni_terms <- read.table('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
+uni_terms <- read.csv2('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
 
 tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, col.names = c('trackID','V2', 'artistName','songName'))
 
 tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
 
 ```
+The following code loads the packages that are required to make a wordcloud. Furthermore we figured out, that the first wordcloud we created, had a very bad distribution. Mostly because of the most common words in english language. Therefor we cleaned our dataset from this words according to our findings and the wikipedia page (https://en.wikipedia.org/wiki/Most_common_words_in_English). Thus we used 'the','and' and 'a'.
 
-```{r pressure, echo=TRUE}
-# Install
-#install.packages("tm")  # for text mining
-#install.packages("SnowballC") # for text stemming
-#install.packages("wordcloud") # word-cloud generator 
-#install.packages("RColorBrewer") # color palettes
-
-# Load
-library("tm")
-library("SnowballC")
-library("wordcloud")
-library("RColorBrewer")
-
+```{r loadPackages, echo=TRUE, cache=TRUE}
+# Load packages
+library("NLP")
+library("tm") # for text mining
+library("SnowballC") # for text stemming
+library("RColorBrewer") # color palettes
+library("wordcloud") # word-cloud generator 
 
 docs <- Corpus(VectorSource(as.String(artists$artistName)))
 
 # Convert the text to lower case
 docs <- tm_map(docs, content_transformer(tolower))
 
-dtm <- TermDocumentMatrix(docs)
-m <- as.matrix(dtm)
-v <- sort(rowSums(m),decreasing=TRUE)
-d <- data.frame(word = names(v),freq=v)
-head(d, 10)
-
-# important for better plot 
-logFreq <- ceiling(log(d$freq)*4)
-
-wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(2,0.35),
-          max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
-
+others <- c('the','and','a')
 
 toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
-docs <- tm_map(docs, toSpace, "the")
+for (i in 1:length(others)){
+docs <- tm_map(docs, toSpace, others[i])
+}
 
 dtm <- TermDocumentMatrix(docs)
 m <- as.matrix(dtm)
@@ -79,72 +75,45 @@ d <- data.frame(word = names(v),freq=v)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale= c(2,0.35),
           max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 
-
 ```
+
+
 ```{r}
+# Load packages
+library("NLP")
+library("tm") # for text mining
+library("SnowballC") # for text stemming
+library("RColorBrewer") # color palettes
+library("wordcloud") # word-cloud generator 
+
 docs1 <- Corpus(VectorSource(as.String(tracks$songName)))
 
 # Convert the text to lower case
 docs1 <- tm_map(docs1, content_transformer(tolower))
 
+others <- c('the','version','and','from', 'feat','album')
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+for (i in 1:length(others)){
+docs1 <- tm_map(docs1, toSpace, others[i])
+}
+
 dtm <- TermDocumentMatrix(docs1)
 m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
-head(d, 10)
 
-# important for better plot 
-logFreq <- ceiling(log(d$freq)*4)
-
-wordcloud(words = d$word, freq = logFreq, min.freq = 1, scale= c(1,0.35),
-          max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+head(d,7)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
+          max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 ```
 
 
-```{r}
 
-aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
-unique(tracksPerYear$artistName)
-
-as.character(tracksPerYear$artistName)
-
-summary(table(tracksPerYear$Year,as.character(tracksPerYear$artistName)))
-
-aggregate(tracksPerYear$Year, list(name = as.character(tracksPerYear$artistName)), sum)
-
-plot(tracksPerYear$Year,tracksPerYear$artistName)
-text(tracksPerYear$Year,tracksPerYear$artistName, labels = tracksPerYear$artistName)
-
-with(tracksPerYear, text(sr~dpi, labels = row.names(LifeCycleSavings[1:9,]), pos = 4))
-
-labels(tracksPerYear$artistName)
-
-plot(tracksPerYear$artistName)
-
-plot(tracksPerYear$Year[tracksPerYear$Year>2000],tracksPerYear$artistName[tracksPerYear$Year>2000])
-
-```
 ```{r}
 # install.packages('rworldmap')
 library(rworldmap)
 newmap <- getMap(resolution = "low")
 
-plot.new()
-plot(newmap, xlim = c(-180, 180), ylim = c(-100, 100), asp = 1)
-par(new = TRUE)
-
-summary(newmap)
-plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
-
-plot.new()
-plot(lon, lat, col = "red", cex = .3, add = TRUE)
-
-plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
-points(lat)
-
-range(as.numeric(location$lon))
-sort(location$lon)
-[c(1,length(location$lon))]
 
 lon <- as.double(as.character(location$lon))
 lat <- as.double(as.character(location$lat))
@@ -152,22 +121,44 @@ lat <- as.double(as.character(location$lat))
 lon <- lon[!is.na(lon)]
 lat <- lat[!is.na(lat)]
 
-length(lat)
-length(lon)
-
-as.numeric(lat)
+#plot.new()
+#plot(newmap, xlim = c(-180, 180), ylim = c(-100, 100), asp = 1)
 
 
-typeof(lon)
-
-as.double(location$lon)
-unlist(lapply(location$lon, is.double))  
-location$lon[is.integer(location$lon)]
-location$lat[is.integer(location$lat)]
-typeof(location$lat)
+#summary(newmap)
+plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
+par(new = TRUE)
+plot(lon, lat, col = "red", cex = .3)
 
 ```
 
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+```{r}
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+#library(rhdf5)
+#path <- '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data #Visualization/Tasks/DV_Project_2/data/A/TRAAAAW128F429D538.h5'
+#my.data <- h5ls("/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data #Visualization/Tasks/DV_Project_2/data/A/TRAAAAW128F429D538.h5")
+#mydata <- h5read(path, "/metadata/artist_terms")
+#mydata1 <- h5read(path, "/analysis/songs")
+#mydata2 <- h5read(path, "/metadata/similar_artists")
+#mydata3 <- h5read(path, "/musicbrainz/artist_mbtags")
+#mydata4 <- h5read(path, "/metadata")
+#mydata4 <- h5read(path, "/analysis/segments_loudness_start")
+
+```
+# Conclusion
+
+
+The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example-track-description
+
+
+- Nehme eine Menge an Songs die uns gut gefallen schau sie dir an 
+- nehme eine weiter menge vergleiche diese miteinander und höre sie dir an und gib dein final ergebnis 
+
+# Sources
