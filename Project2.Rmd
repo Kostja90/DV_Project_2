@@ -45,9 +45,11 @@ tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, c
 tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
 
 ```
-The following code loads the packages that are required to make a wordcloud. Furthermore we figured out, that the first wordcloud we created, had a very bad distribution. Mostly because of the most common words in english language. Therefor we cleaned our dataset from this words according to our findings and the wikipedia page (https://en.wikipedia.org/wiki/Most_common_words_in_English). Thus we used 'the','and' and 'a'.
+# General information visualized
 
-```{r loadPackages, echo=TRUE, cache=TRUE}
+The following code loads the packages that are required to make a wordcloud. Furthermore we figured out, that the first wordcloud we created, had a very bad distribution. Mostly because of the most common words in english language. Therefor we cleaned our dataset from this words according to our findings and the wikipedia page (https://en.wikipedia.org/wiki/Most_common_words_in_English). Thus we used 'the','and' and 'a' to clean the dataset.
+
+```{r wordclodArtist, echo=TRUE, cache=TRUE}
 # Load packages
 library("NLP")
 library("tm") # for text mining
@@ -72,13 +74,25 @@ m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 
-wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale= c(2,0.35),
+wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
           max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
 
+head(d,8)
 ```
 
+When looking at the plot above one can see, that the common artistnames are eather orchestr or John. Also there are some spanisch words like los, so one can see that this dataset consists not only out of english artist but also spanish artists. Some other names like Joe or King are also quite common used. To make some more assumptions and to get a better understanding of the wordcloud, the actual frequencies of the very frequent entries where provided in a table. Together with this table and the wordcloud one could have a better understanding of the distribution of the Artistnames in the given dataset. After a small search on the internet (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) one can see, that John was one of the most common names in the 1990's. 
 
 ```{r}
+tracksPerYear$artistName[tracksPerYear$Year >= 1990 & tracksPerYear$Year <= 2000]
+```
+After displaing the actual dataset and the entries of the artistnames between the years 1990 and 2000, the assumption made before should be declined. However one can see another common word in the displayed subset 'Los'. 
+The final statement about this set can not be well desribed but could be seen as a description of the given dataset without any further evidence. One statemnet is still appropriate. This dataset is distributet (after cleaning the dataset), like the wordcloud  and the table of frequencies is displaying it.
+
+
+Almost the same analysis we did on common songnames. However the common words in this case where not quit the same as in the script before. Finding the common songnames we had to plot the wordcloud as uncleaned version. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the followed wordcloud. Because we decided that those words don't contain a lot of information as well as they are common words in english language we cuted these word out of the provided dataset.
+
+```{r wordcloudSongname }
 # Load packages
 library("NLP")
 library("tm") # for text mining
@@ -102,15 +116,18 @@ m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 
-head(d,7)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
-          max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+          max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"), main = "TITL")
+mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
+
+head(d,7)
 ```
 
+as one can see
 
 
-```{r}
-# install.packages('rworldmap')
+```{r worldmapArtist }
+library(sp)
 library(rworldmap)
 newmap <- getMap(resolution = "low")
 
