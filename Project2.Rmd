@@ -74,7 +74,7 @@ m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 
-wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
+wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale = c(3,0.2),
           max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
 
@@ -100,7 +100,7 @@ library("SnowballC") # for text stemming
 library("RColorBrewer") # color palettes
 library("wordcloud") # word-cloud generator 
 
-docs1 <- Corpus(VectorSource(as.String(tracks$songName)))
+docs1 <- Corpus(VectorSource(as.character(tracks$songName)))
 
 # Convert the text to lower case
 docs1 <- tm_map(docs1, content_transformer(tolower))
@@ -123,29 +123,36 @@ mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
 head(d,7)
 ```
 
-as one can see
+Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is clear that this dataset consists of Songnames that are more likely to handle Love and the counterpart of a Human, you. A general assumption could be made, that there are more songs handling Love, the counterpart of someone and the live, then about technic or traveling for example. However this assumption can not be completle prooven since this dataset does not represent all the songnames in the world. 
 
 
-```{r worldmapArtist }
-library(sp)
-library(rworldmap)
-newmap <- getMap(resolution = "low")
+```{r worldmapArtist , warning=FALSE}
+library(maps)
+library(mapdata)
+#library(eurostat)
 
-
+# parse the lat and lon values of given set 
 lon <- as.double(as.character(location$lon))
 lat <- as.double(as.character(location$lat))
 
+# delete all NaN
 lon <- lon[!is.na(lon)]
 lat <- lat[!is.na(lat)]
 
-#plot.new()
-#plot(newmap, xlim = c(-180, 180), ylim = c(-100, 100), asp = 1)
+coordinates <- as.data.frame(cbind(lon, lat))
 
+# take a closer look at europe 
+#europe <- as.data.frame(cbind(lon = c(54.78333, 24.08464, -31.26192, 59.34569), lat = c(80.56667, 34.83469, 39.45479, 62.21215)))
 
-#summary(newmap)
-plot(newmap, xlim = c(-130, 130), ylim = c(-90, 85), asp = 1)
-par(new = TRUE)
-plot(lon, lat, col = "red", cex = .3)
+map('world',c('.')) 
+points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
+
+#x <- map('world', xlim = range(europe$lon), ylim = range(europe$lat), namefield = TRUE)
+#x$names <- gsub("\\:.*","",x$names)
+
+map(col = "grey80", border = "grey40", fill = TRUE,
+  xlim = c(-25, 45), ylim = c(36, 70), mar = rep(0.1, 4))
+points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 
 ```
 
@@ -179,3 +186,5 @@ The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example
 - nehme eine weiter menge vergleiche diese miteinander und höre sie dir an und gib dein final ergebnis 
 
 # Sources
+
+european limits : http://www.milanor.net/blog/maps-in-r-introduction-drawing-the-map-of-europe/
