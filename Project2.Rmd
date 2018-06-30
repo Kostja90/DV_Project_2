@@ -11,7 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/data')
+setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/')
 ```
 
 # Introduction
@@ -49,7 +49,7 @@ tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header =
 
 The following code loads the packages that are required to make a wordcloud. Furthermore we figured out, that the first wordcloud we created, had a very bad distribution. Mostly because of the most common words in english language. Therefor we cleaned our dataset from this words according to our findings and the wikipedia page (https://en.wikipedia.org/wiki/Most_common_words_in_English). Thus we used 'the','and' and 'a' to clean the dataset.
 
-```{r wordclodArtist, echo=TRUE, cache=TRUE}
+```{r wordclodArtist, echo=TRUE, cache=TRUE, warning=FALSE}
 # Load packages
 library("NLP")
 library("tm") # for text mining
@@ -92,7 +92,7 @@ The final statement about this set can not be well desribed but could be seen as
 
 Almost the same analysis we did on common songnames. However the common words in this case where not quit the same as in the script before. Finding the common songnames we had to plot the wordcloud as uncleaned version. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the followed wordcloud. Because we decided that those words don't contain a lot of information as well as they are common words in english language we cuted these word out of the provided dataset.
 
-```{r wordcloudSongname }
+```{r wordcloudSongname, warning=FALSE }
 # Load packages
 library("NLP")
 library("tm") # for text mining
@@ -162,7 +162,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 
 
-```{r}
+```{r, warning=FALSE}
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("rhdf5")
 library(rhdf5) # required for H5 files
@@ -196,7 +196,7 @@ bruno_songs <- h5read(toString(SubPaths$bruno), "/analysis/songs");bruno_songs
 madonna_songs <- h5read(toString(SubPaths$madonna), "/analysis/songs");madonna_songs
 
 
-mydata <- h5read(path, "/metadata/artist_terms")
+#mydata <- h5read(path, "/metadata/artist_terms")
 #mydata1 <- h5read(path, "/analysis/songs")
 #mydata2 <- h5read(path, "/metadata/similar_artists")
 #mydata3 <- h5read(path, "/musicbrainz/artist_mbtags")
@@ -212,8 +212,8 @@ madonna trackid TRALONM128EF35A199
 bruno mars  TRAWBHE12903CBC4CB
 
 ```{r}
-library(fmsb)
-
+#library(fmsb)
+warnings()
 ```
 
 
