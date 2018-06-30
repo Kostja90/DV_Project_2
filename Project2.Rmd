@@ -165,10 +165,38 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 ```{r}
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("rhdf5")
-#library(rhdf5)
-#path <- '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data #Visualization/Tasks/DV_Project_2/data/A/TRAAAAW128F429D538.h5'
-#my.data <- h5ls("/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data #Visualization/Tasks/DV_Project_2/data/A/TRAAAAW128F429D538.h5")
-#mydata <- h5read(path, "/metadata/artist_terms")
+library(rhdf5) # required for H5 files
+
+# set a hardcoded Path to the MillionSongSubset
+pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
+
+# create array with found Ids in beforehand containing prefered songs
+TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
+
+# find automaticaly all paths with names of trackIDs
+SubPaths <- lapply(TrackIDs,function(x){
+  list.files(pathToSet, x, recursive=TRUE, full.names=TRUE, include.dirs=TRUE)
+})
+
+# beautify the dataset 
+SubPaths <- data.frame(SubPaths = t(unlist(SubPaths)))
+names(SubPaths) <- c('beyonce', 'justin', 'kanye', 'madonna', 'bruno')
+
+
+
+# read the H5 files and create a readable output
+artist <- lapply(SubPaths, function(x){
+  h5ls(toString(x))
+})
+
+beyonce_songs <- h5read(toString(SubPaths$beyonce), "/analysis/songs");beyonce_songs
+justin_songs <- h5read(toString(SubPaths$justin), "/analysis/songs");justin_songs
+kanye_songs <- h5read(toString(SubPaths$kanye), "/analysis/songs");kanye_songs
+bruno_songs <- h5read(toString(SubPaths$bruno), "/analysis/songs");bruno_songs
+madonna_songs <- h5read(toString(SubPaths$madonna), "/analysis/songs");madonna_songs
+
+
+mydata <- h5read(path, "/metadata/artist_terms")
 #mydata1 <- h5read(path, "/analysis/songs")
 #mydata2 <- h5read(path, "/metadata/similar_artists")
 #mydata3 <- h5read(path, "/musicbrainz/artist_mbtags")
@@ -176,6 +204,20 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 #mydata4 <- h5read(path, "/analysis/segments_loudness_start")
 
 ```
+
+beyonce trackid TRAPZTV128F92CAA4E
+justin trackid TRANNZZ128F92C22F7
+kanye trackid TRAQZQX128F931338F
+madonna trackid TRALONM128EF35A199
+bruno mars  TRAWBHE12903CBC4CB
+
+```{r}
+library(fmsb)
+
+```
+
+
+
 # Conclusion
 
 
