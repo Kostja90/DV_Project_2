@@ -189,66 +189,46 @@ artist <- lapply(SubPaths, function(x){
   h5ls(toString(x))
 })
 
-beyonce_Asongs <- h5read(toString(SubPaths$beyonce), "/analysis/songs")
-beyonce_Msongs <- h5read(toString(SubPaths$beyonce), "/metadata/songs")
 
-justin_Asongs <- h5read(toString(SubPaths$justin), "/analysis/songs")
-justin_Msongs <- h5read(toString(SubPaths$justin), "/metadata/songs")
 
-kanye_Asongs <- h5read(toString(SubPaths$kanye), "/analysis/songs")
-kanye_Msongs <- h5read(toString(SubPaths$kanye), "/metadata/songs")
+Analyze_song <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/songs")
+})
+Analyze_song <- do.call(rbind, Analyze_song)
 
-bruno_Asongs <- h5read(toString(SubPaths$bruno), "/analysis/songs")
-bruno_Msongs <- h5read(toString(SubPaths$bruno), "/metadata/songs")
-
-madonna_Asongs <- h5read(toString(SubPaths$madonna), "/analysis/songs")
-madonna_Msongs <- h5read(toString(SubPaths$madonna), "/metadata/songs")
+Meta_song <- apply(SubPaths,2,function(x){
+  h5read(x,"/metadata/songs")
+})
+Meta_song <- do.call(rbind, Meta_song)
 
 library(fmsb)
 
-beyonce_radar <- data.frame(matrix(c(beyonce_Msongs$artist_familiarity,beyonce_Msongs$artist_hotttnesss,
-                             beyonce_Asongs$tempo, beyonce_Asongs$time_signature, beyonce_Asongs$loudness,
-                             beyonce_Asongs$key), ncol = 6))
-justin_radar <- data.frame(matrix(c(justin_Msongs$artist_familiarity,justin_Msongs$artist_hotttnesss,
-                             justin_Asongs$tempo, justin_Asongs$time_signature, justin_Asongs$loudness,
-                             justin_Asongs$key), ncol = 6))
-kanye_radar <- data.frame(matrix(c(kanye_Msongs$artist_familiarity,kanye_Msongs$artist_hotttnesss,
-                             kanye_Asongs$tempo, kanye_Asongs$time_signature, kanye_Asongs$loudness,
-                             kanye_Asongs$key), ncol = 6))
-bruno_radar <- data.frame(matrix(c(bruno_Msongs$artist_familiarity,bruno_Msongs$artist_hotttnesss,
-                             bruno_Asongs$tempo, bruno_Asongs$time_signature, bruno_Asongs$loudness,
-                             bruno_Asongs$key), ncol = 6))
-madonna_radar <- data.frame(matrix(c(madonna_Msongs$artist_familiarity,madonna_Msongs$artist_hotttnesss,
-                             madonna_Asongs$tempo, madonna_Asongs$time_signature, madonna_Asongs$loudness,
-                             madonna_Asongs$key), ncol = 6))
-data <- rbind(beyonce_radar,justin_radar,kanye_radar,bruno_radar,madonna_radar)
-names(data) = c('familiarity','hotttnesss','tempo','time_signature','loudness','key')
-                         
-transparency <- adjustcolor(1:6, alpha.f = 0.2) 
+radarFrame <- function(df1, df2){
+  matrix <- cbind('artist_familiarity' = df1$artist_familiarity, 'artist_hotttnesss' = df1$artist_hotttnesss, 'tempo'= df2$tempo, 'time_signature' = df2$time_signature, 'loudness' = df2$loudness, 'key' = df2$key) 
+  rownames(matrix) <- rownames(df1)
+  matrix <- data.frame(matrix)
+}
 
-namesLegend <- c(paste(beyonce_Msongs$artist_name, beyonce_Msongs$title),paste(justin_Msongs$artist_name, justin_Msongs$title),paste(kanye_Msongs$artist_name, kanye_Msongs$title),paste(bruno_Msongs$artist_name, bruno_Msongs$title),paste(madonna_Msongs$artist_name, madonna_Msongs$title))
-{
-# Custom the radarChart !
-radarchart( data  , axistype=1 , maxmin = FALSE,
- 
+namesLegend <- paste(Meta_song$artist_name,Meta_song$title)
+
+radar <- function(df, namesLeg = namesLegend, x = -2.8 , y= -1.1){
+  transparency <- adjustcolor(1:dim(df)[1], alpha.f = 0.2) 
+  # Custom the radarChart !
+  radarchart( df  , axistype=1 , maxmin = FALSE,
     #custom polygon
-    pcol=1:6, plwd=1 , pfcol = transparency ,
- 
+    pcol=1:dim(df)[1], plwd=1 , pfcol = transparency ,
     #custom the grid
     cglcol="grey", cglty=1, axislabcol=FALSE ,
- 
     #custom labels
     vlcex=0.8 
     )
   par(xpd=TRUE)
-legend(-2.8,-1.1, legend = namesLegend, bty = "n", pch=20 , col=1:6 , cex=0.8, pt.cex=2)
+legend(x,y, legend = namesLeg, bty = "n", pch=20 , col=1:dim(df)[1] , cex=0.8, pt.cex=2)
 }
- 
 
+data <- radarFrame(Meta_song, Analyze_song)
 
-#h5read(toString(SubPaths$beyonce), "/analysis/segments_loudness_max_time")
-
-
+radar(data)
 # anschauen für radar 
 # artist familarity unter metadata
 # hotness sind aber estimateionen dh von EchoNest berechnet und schwierig in der absoluten umgehensweise
@@ -261,12 +241,29 @@ legend(-2.8,-1.1, legend = namesLegend, bty = "n", pch=20 , col=1:6 , cex=0.8, p
 
 # loudnes max als detailierter wert 
 
-#mydata <- h5read(path, "/metadata/artist_terms")
-#mydata1 <- h5read(path, "/analysis/songs")
-#mydata2 <- h5read(path, "/metadata/similar_artists")
-#mydata3 <- h5read(path, "/musicbrainz/artist_mbtags")
-#mydata4 <- h5read(path, "/metadata")
-#mydata4 <- h5read(path, "/analysis/segments_loudness_start")
+```
+```{r}
+
+compareFrame <- data.frame(rbind(
+  beyonce = c('familiarity' = 70, 'tempo' = 97, 'time_signature' = 4, 'loudness' = -5,'key' = 1),
+  justin = c('familiarity' = 70, 'tempo' = 76, 'time_signature' = 4, 'loudness' = -5,'key' = 7),
+  kanye = c('familiarity' = 65, 'tempo' = 106, 'time_signature' = 4, 'loudness' = -5,'key' = 9),
+  madonna = c('familiarity' = 54, 'tempo' = 119, 'time_signature' = 4, 'loudness' = -7,'key' = 9),
+  bruno = c('familiarity' = 70, 'tempo' = 104, 'time_signature' = 4, 'loudness' = -6,'key' = 10)
+))
+
+# because all timesignatuires are 4, there is no proper graph 
+# radarchart draws relatively
+radar(compareFrame)
+
+
+# not realy comparable as seen
+par(mfrow = c(1,2))
+radar(data,x=-2.2, y = -1.2)
+radar(compareFrame,x=-2.2)
+par(mfrow = c(1,1))
+
+
 
 ```
 
@@ -277,12 +274,74 @@ madonna trackid TRALONM128EF35A199
 bruno mars  TRAWBHE12903CBC4CB
 
 ```{r}
-#library(fmsb)
+# library(fmsb)
+# Tune_Beyance
+# Tune_Justin <- c(,,76,,-5,8)
+# Tune_Kanye
+# Tune_Bruno
+# Tune_Madonna
 
+loudness_start <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_loudness_start")
+})
+
+loudness_max <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_loudness_max")
+})
+
+par(mfrow= c(1,2))
+boxplot(loudness_start, main = 'loudness_start' )
+boxplot(loudness_max, main = 'loudness_max' )
+mtext('Boxplots of loudness', outer = TRUE, side = 3, line = -1)
+par(mfrow= c(1,1))
+
+
+Draw_matrix_plots <- function(plt){
+  layout(matrix(c(1,1,2,2,3,3,0,4,4,5,5,0), 2, byrow = TRUE), heights=c(2,2))
+  c <- 0
+  invisible(lapply(plt,function(x){
+  c <<- c+1
+  plot(x,type = 'l', axes = FALSE, xlab = '', ylab = '', main = names(plt)[c])
+  axis(2)
+  axis(1)
+  }))
+  mtext(paste('Plot', deparse(substitute(plt)),'for different interprets' ), side = 3, line = -19, outer = TRUE)
+  par(mfrow=c(1,1))
+}
+
+Draw_matrix_plots(loudness_start)
+
+Draw_matrix_plots(loudness_max)
+
+matplot_Draw <- function(plt){
+  dFrame <- do.call(cbind, plt)
+  matplot(dFrame,type = "l", col = 1:dim(dFrame)[2], ylab = "loudness", xlab = 'segmentstep', main = paste('matplot', deparse(substitute(plt))))
+  legend("topleft", legend = names(plt), col = 1:dim(dFrame)[2], pch = 16)
+}
+
+matplot_Draw(loudness_start)
+
+matplot_Draw(loudness_max)
 
 ```
 
 
+```{r}
+
+# nicht sicher mit dem hier 
+Analyze_pitch <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_pitches")
+})
+boxplot(Analyze_pitch)
+
+
+Analyze_timbre <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_timbre")
+})
+
+boxplot(Analyze_timbre)
+
+```
 
 # Conclusion
 
@@ -296,3 +355,5 @@ The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example
 # Sources
 
 european limits : http://www.milanor.net/blog/maps-in-r-introduction-drawing-the-map-of-europe/
+vergleichseiten: http://www.findsongtempo.com und http://www.tunebat.com
+
