@@ -1,9 +1,13 @@
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("rhdf5")
+library(tcltk) # for interactive file choosing
 library(rhdf5) # required for H5 files
 
+
+pathToSet <- tk_choose.dir(default = "", caption = "Select directory")
+
 # set a hardcoded Path to the MillionSongSubset
-pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
+# pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
 
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
