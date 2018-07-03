@@ -44,8 +44,8 @@ The following codechunk was only used to access the txt files in RStudio.
 # Load preprocessed data and name the columns
 location <- read.csv2('data/subset_artist_location.txt',sep = ';', header = FALSE, col.names = c('artistId', 'lat','lon',  'trackID', 'artistName'))
 artists <- read.csv2('data/subset_unique_artists.txt',sep = ';', header = FALSE, col.names = c('artistId', 'V2', 'trackID', 'artistName'))
-tags <- read.csv2('data/subset_unique_mbtags.txt',sep = ';', header = FALSE, col.names = c('tags'))
-uni_terms <- read.csv2('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
+# tags <- read.csv2('data/subset_unique_mbtags.txt',sep = ';', header = FALSE, col.names = c('tags'))
+# uni_terms <- read.csv2('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
 tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, col.names = c('trackID','V2', 'artistName','songName'))
 tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
 
@@ -66,9 +66,7 @@ The package 'wordcloud' is a very usefull one, and does provide a graphical repr
 
 ```{r wordclodArtist, echo=TRUE, cache=TRUE, warning=FALSE}
 # Load packages
-# library("NLP")
 library("tm") # for text mining
-# library("SnowballC") # for text stemming
 library("RColorBrewer") # color palettes
 library("wordcloud") # word-cloud generator 
 
@@ -119,31 +117,24 @@ This set needs to be more described and explored, because the previous explorati
 Almost the same analysis was done on common songnames. However the common words in this case where not quit the same as in the script before. The method to find common songnames was firstly plot the wordcloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it is obvious to delete those words. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the following wordcloud.
 
 ```{r wordcloudSongname, warning=FALSE , cache=TRUE}
-# Load packages
-#library("NLP")
-#library("tm") # for text mining
-#library("SnowballC") # for text stemming
-#library("RColorBrewer") # color palettes
-#library("wordcloud") # word-cloud generator 
-
-docs1 <- Corpus(VectorSource(as.character(tracks$songName)))
+docs <- Corpus(VectorSource(as.character(tracks$songName)))
 
 # Convert the text to lower case
-docs1 <- tm_map(docs1, content_transformer(tolower))
+docs <- tm_map(docs, content_transformer(tolower))
 
 others <- c('the','version','and','from', 'feat','album')
 toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
 for (i in 1:length(others)){
-docs1 <- tm_map(docs1, toSpace, others[i])
+docs <- tm_map(docs, toSpace, others[i])
 }
 
-dtm <- TermDocumentMatrix(docs1)
+dtm <- TermDocumentMatrix(docs)
 m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
-          max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"), main = "TITL")
+          max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
 ```
 
@@ -162,8 +153,6 @@ Since it is clear that the dataset not only contains artists from england or eur
 
 ```{r worldmapArtist , warning=FALSE}
 library(maps)
-#library(mapdata)
-#library(eurostat)
 
 # parse the lat and lon values of given set 
 lon <- as.double(as.character(location$lon))
@@ -175,35 +164,37 @@ lat <- lat[!is.na(lat)]
 
 coordinates <- as.data.frame(cbind(lon, lat))
 
-# take a closer look at europe 
-#europe <- as.data.frame(cbind(lon = c(54.78333, 24.08464, -31.26192, 59.34569), lat = c(80.56667, 34.83469, 39.45479, 62.21215)))
-
+# world map 
 map('world',c('.'), col = "grey80", fill = TRUE, border = "grey40") 
 points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
-
-#x <- map('world', xlim = range(europe$lon), ylim = range(europe$lat), namefield = TRUE)
-#x$names <- gsub("\\:.*","",x$names)
 ```
+
 The assumptions about the artists made beforehand are completly right. The data not only consist of european and english speaking artist but also of people from arround the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the songnames it is hard to tell weather the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
 
 An even closer look on Europe is provided by the map below. Due to the blurred representation of Europe in the worldmap, this map was created. Especially because of the actual location of the author and the location of the university this representation was chosen. 
 
 ```{r europemapArtist, warning=FALSE}
+# europe map
 map(col = "grey80", border = "grey40", fill = TRUE,
   xlim = c(-25, 45), ylim = c(36, 70), mar = rep(0.1, 4))
 points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 ```
 
 # Analyze choosen Songs
-
+As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this one should be able to read in, the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' that helps accessing the datafiles and get the information out to analize it.
 
 ```{r, warning=FALSE}
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("rhdf5")
+library(tcltk) # for interactive file choosing
 library(rhdf5) # required for H5 files
+
+# pathToSet <- tk_choose.dir(default = "", caption = "Select directory")
 
 # set a hardcoded Path to the MillionSongSubset
 pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
+
+
 
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
@@ -216,7 +207,6 @@ SubPaths <- lapply(TrackIDs,function(x){
 # beautify the dataset 
 SubPaths <- data.frame(SubPaths = t(unlist(SubPaths)))
 names(SubPaths) <- c('beyonce', 'justin', 'kanye', 'madonna', 'bruno')
-
 
 
 # read the H5 files and create a readable output
