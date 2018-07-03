@@ -154,7 +154,7 @@ Also by looking at the folowing table, one can have a better and more detailed i
 head(d,7)
 ```
 
-## Visualize artistlocations
+## Visualize artist locations
 
 Since it is clear that the dataset not only contains artists from england or europe or the US, it would be nice to have a proper listing of the world together with the location of the artists. This can be achived through the package 'maps' [^map1]. This package provides not only a method to draw a map by accsessing it through a word like world but also by giving this method a border by longitude and latitude to get a closer look on different parts of it. It is easy to use and draw complex maps as well as set some points on the map. The worldmap below shows all artists with their locations. Unfortinately the dataset does not provide a location for each containing artist, but nevertheless it creates a good overview. 
 
@@ -183,17 +183,18 @@ points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
 
 #x <- map('world', xlim = range(europe$lon), ylim = range(europe$lat), namefield = TRUE)
 #x$names <- gsub("\\:.*","",x$names)
+```
+The assumptions about the artists made beforehand are completly right. The data not only consist of european and english speaking artist but also of people from arround the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the songnames it is hard to tell weather the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
 
+An even closer look on Europe is provided by the map below. Due to the blurred representation of Europe in the worldmap, this map was created. Especially because of the actual location of the author and the location of the university this representation was chosen. 
+
+```{r europemapArtist, warning=FALSE}
 map(col = "grey80", border = "grey40", fill = TRUE,
   xlim = c(-25, 45), ylim = c(36, 70), mar = rep(0.1, 4))
 points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
-
 ```
 
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
+# Analyze choosen Songs
 
 
 ```{r, warning=FALSE}
