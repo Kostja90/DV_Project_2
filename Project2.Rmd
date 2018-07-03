@@ -23,8 +23,8 @@ Our goal in this Project is going to be an analysis of some songfiles that we pr
 Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information too. 
 
 
-[^wiki1]: https://en.wikipedia.org/wiki/The_Echo_Nest page view [02.06.18]
-[^Labinfo1]: https://labrosa.ee.columbia.edu/millionsong/ page view [02.06.18]
+[^wiki1]: https://en.wikipedia.org/wiki/The_Echo_Nest page view [02.07.18]
+[^Labinfo1]: https://labrosa.ee.columbia.edu/millionsong/ page view [02.07.18]
 
 
 # Handle the downloaded data
@@ -33,36 +33,36 @@ After downloading and unzipping the data, one can see two different folders. The
 For more information about the dataset especially about the frequent asked questions we recomend to go to (https://labrosa.ee.columbia.edu/millionsong/faq). 
 
 [^echo1]: TR+LETTERS + LETTERS&NUMBERS so the directorypath within the dataset is based on the first 3 letters after the 3rd one e.i 'MillionSong/data/A/D/H/TRADHRX12903CD3866.h5'
-[^nasa]: (National Aeronautics and Space Administration) https://www.nasa.gov/about/index.html page view [02.06.18]
+[^nasa]: (National Aeronautics and Space Administration) https://www.nasa.gov/about/index.html page view [02.07.18]
 
 ## Preprocess the Additional files
 
 When accessing the data provided in 'AdditionalFiles' folder, one has to remove the Seperators \<SEP\> and replace those with a common seperator like ';'. This should be done, because R is used to a one byte seperator and therefor it is not possible to read a file with a seperator like \<SEP\>.
 
-The following codechunk was only used to access the txt files in RStudio. This is done with \read.csv()
-
+The following codechunk was only used to access the txt files in RStudio.
 
 ```{r importShow , warning=FALSE, echo=TRUE}
+# Load preprocessed data and name the columns
 location <- read.csv2('data/subset_artist_location.txt',sep = ';', header = FALSE, col.names = c('artistId', 'lat','lon',  'trackID', 'artistName'))
-
 artists <- read.csv2('data/subset_unique_artists.txt',sep = ';', header = FALSE, col.names = c('artistId', 'V2', 'trackID', 'artistName'))
-
 tags <- read.csv2('data/subset_unique_mbtags.txt',sep = ';', header = FALSE, col.names = c('tags'))
-
 uni_terms <- read.csv2('data/subset_unique_terms.txt',sep = ';', header = FALSE, col.names = c('terms Unique' ))
-
 tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, col.names = c('trackID','V2', 'artistName','songName'))
-
 tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
 
 ```
 # General information visualized
 
-The following code loads the packages that are required to make a wordcloud. Furthermore we figured out, that the first wordcloud we created, had a very bad distribution. Mostly because of the most common words in english language. Therefor we cleaned our dataset from this words according to our findings and the wikipedia page (https://en.wikipedia.org/wiki/Most_common_words_in_English). Thus we used 'the','and' and 'a' to clean the dataset.
+The following code loads the packages that are required to make a wordcloud. Furthermore while creating a wordcloud, one will notice that the first created wordcloud, has a very bad distribution. Mostly because of the most common words in english language. Those words do not have a meaning for this purposes. Therefor, according to the observation and an wikipedia article [^wiki2], one should wipe up the dataset from this words. Thus the recomendation is to use 'the','and' and 'a' to clean the dataset.
+
+Describing the required packages, it is important to undesrstand what each package is used for in the following codechunk. Starting with 'tm' (Text Mining Package), that is common to use for wordcloud and handling different strings. Firstly one should take a closer look at Corpus that creates a collaction of Corpora [^Corpus1]
+
+[^wiki2]: (https://en.wikipedia.org/wiki/Most_common_words_in_English) page view [26.06.18]
+[^Corpus1]: (https://cran.r-project.org/web/packages/tm/tm.pdf) page view [26.06.18]
 
 ```{r wordclodArtist, echo=TRUE, cache=TRUE, warning=FALSE}
 # Load packages
-library("NLP")
+# library("NLP")
 library("tm") # for text mining
 library("SnowballC") # for text stemming
 library("RColorBrewer") # color palettes
@@ -73,13 +73,16 @@ docs <- Corpus(VectorSource(as.String(artists$artistName)))
 # Convert the text to lower case
 docs <- tm_map(docs, content_transformer(tolower))
 
+# most common words in english that do not have a meaning for this puposes
 others <- c('the','and','a')
 
+# convert the found words to ''
 toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
 for (i in 1:length(others)){
 docs <- tm_map(docs, toSpace, others[i])
 }
 
+# calculate frequency of occuring words
 dtm <- TermDocumentMatrix(docs)
 m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
@@ -89,6 +92,7 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale = c(3,0.2),
           max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
 
+# show only head of frequency dataFrame
 head(d,8)
 ```
 
