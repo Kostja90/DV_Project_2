@@ -22,7 +22,6 @@ Our goal in this Project is going to be an analysis of some songfiles that we pr
 
 Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information too. 
 
-
 [^wiki1]: https://en.wikipedia.org/wiki/The_Echo_Nest page view [02.07.18]
 [^Labinfo1]: https://labrosa.ee.columbia.edu/millionsong/ page view [02.07.18]
 
@@ -55,16 +54,19 @@ tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header =
 
 The following code loads the packages that are required to make a wordcloud. Furthermore while creating a wordcloud, one will notice that the first created wordcloud, has a very bad distribution. Mostly because of the most common words in english language. Those words do not have a meaning for this purposes. Therefor, according to the observation and an wikipedia article [^wiki2], one should wipe up the dataset from this words. Thus the recomendation is to use 'the','and' and 'a' to clean the dataset.
 
-Describing the required packages, it is important to undesrstand what each package is used for in the following codechunk. Starting with 'tm' (Text Mining Package), that is common to use for wordcloud and handling different strings. Firstly one should take a closer look at Corpus that creates a collaction of Corpora [^Corpus1]
+Describing the required packages, it is important to undesrstand what each package is used for in the following codechunk. Starting with 'tm' (Text Mining Package), that is common to use for wordcloud and handling different strings. Firstly one should take a closer look at Corpus that creates a collaction of corpora [^Corpus1]. Secondly one should create a Vector Source for the Corpus function and finally tm_map, which is an Interface that applies transformation functions to corpora objects. Also a very important function content_transformer is used to create a wrapper to get and set a content of a document. This steps where used to preprocess the documents. After doing so one should also consider to create a term document matrix, which contains every Term in documents and the documents it does appear in.
+
+The package 'wordcloud' is a very usefull one, and does provide a graphical representation of the frequencies of used words in one or more documents [^wordcl]. This wordclouds can be seen in the following plots.
 
 [^wiki2]: (https://en.wikipedia.org/wiki/Most_common_words_in_English) page view [26.06.18]
 [^Corpus1]: (https://cran.r-project.org/web/packages/tm/tm.pdf) page view [26.06.18]
+[^wordcl]: (https://cran.r-project.org/web/packages/wordcloud/wordcloud.pdf) page view [27.06.18]
 
 ```{r wordclodArtist, echo=TRUE, cache=TRUE, warning=FALSE}
 # Load packages
 # library("NLP")
 library("tm") # for text mining
-library("SnowballC") # for text stemming
+# library("SnowballC") # for text stemming
 library("RColorBrewer") # color palettes
 library("wordcloud") # word-cloud generator 
 
@@ -91,12 +93,19 @@ d <- data.frame(word = names(v),freq=v)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale = c(3,0.2),
           max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
+```
 
+When looking at the wordcloud above one can see, that the most common artistnames are eather orchestr or John. Also there are some spanisch artist names containing words like los. This could be used for a better knowledge about the dataset. It is more clear that artists do not only come from england europe or the US but also from Spain or Latin America. One could of course get rid of the prepositions in all languages the dataset contains. Thus the preposition los would alse be wiped out.
+Some other names like Joe or King are also quite common used. To make some more assumptions and to get a better understanding of the wordcloud, the actual frequencies of the very frequent entries where provided in a table. 
+
+```{r = headWordclod, cache=TRUE, warning=FALSE}
 # show only head of frequency dataFrame
 head(d,8)
 ```
 
-When looking at the plot above one can see, that the common artistnames are eather orchestr or John. Also there are some spanisch words like los, so one can see that this dataset consists not only out of english artist but also spanish artists. Some other names like Joe or King are also quite common used. To make some more assumptions and to get a better understanding of the wordcloud, the actual frequencies of the very frequent entries where provided in a table. Together with this table and the wordcloud one could have a better understanding of the distribution of the Artistnames in the given dataset. After a small search on the internet (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) one can see, that John was one of the most common names in the 1990's. 
+Together with this table and the wordcloud one could have a better understanding of the distribution of the artistnames in the given dataset. Now it is interesting to get some more facts about teh most common name John [°research] After a small search on the internet (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) one can see, that John was one of the most common names in the 1990's. 
+
+[°research]: (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) page view [23.06.18]
 
 ```{r}
 tracksPerYear$artistName[tracksPerYear$Year >= 1990 & tracksPerYear$Year <= 2000]
