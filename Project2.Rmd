@@ -15,20 +15,31 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 ```
 
 # Introduction
-As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis, the dataset contains also some Metadata, like Author, produced year etc. and finally music data in HDF5 format. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com). As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). 
+As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis, the dataset includes some Metadata, like Author, produced year etc. and finally music data features for each song in HDF5 format. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com), which used to be a music intelligence and data platform for developers until Spotify (https://www.spotify.com/de/), a famous music streaming provider, acquired The Echo Nest.[^wiki1]
+As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). [^Labinfo1]
 
-Our goal in this Project is going to be an analysis of some songfiles that we prefer. Since all of the musicfiles are labeled with artist- and songnames as well as the year of production,  we can  find allmost every song eather on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). First we are going to listen to some of the songs to find the ones that we prefer. Further, we are going to analyze that songs to have a good understanding of data that describes our preferation. Last we are going to predict some more songs that will be chosen randomly from the whole dataset. 
+Our goal in this Project is going to be an analysis of some songfiles that we prefer. Since all of the musicfiles are labeled with artist- and songnames as well as the year of production,  we can  find allmost every song eather on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). First we are going to listen to some of the songs to find the ones that we prefer. Further, we are going to analyze that songs to have a good understanding of data that describes our preferation. Last we are going to use spotify for prediction. Thus we hope for a better analysis and understanding of the given data. Otherwise we would be comparing mostly different data that is not suitable for research purposes.
 
-Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information. 
+Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information too. 
+
+
+[^wiki1]: https://en.wikipedia.org/wiki/The_Echo_Nest page view [02.06.18]
+[^Labinfo1]: https://labrosa.ee.columbia.edu/millionsong/ page view [02.06.18]
+
 
 # Handle the downloaded data
-After downloading and unzipping the data, one can see two different folders. The first one, 'data', containing several other folders (data files for tracks whose hashes begin with) 'A' and 'B' which contain songfiles in HDF5 (Hirarchical Data Format 5) format. This format is a general format used in science for big datasets. The provided files contain some analysis, some metadata and some more information that is stored on MusicBrainz (https://musicbrainz.org), an open music encyclopedia. The second folder named 'AdditionalFiles' contains different metadata as either text or db file. This data is going to be used for first hands on the whole dataset, to get to know the dataset since it is accessable really simple and prevent some general information about it. To read both datafolders one should install some additional packages that we will mention later on. 
+After downloading and unzipping the data, one can see two different folders. The first one, 'data', containing several other folders and the second one 'AdditionalFiles', containing some adittional files in either SQL or txt format. The directory structure is based on The Echo Nest Track IDs [^echo1]. The 'data' folder contains exlusively songfiles in HDF5 (Hirarchical Data Format 5) format. This format is mostly used in science apllications for big datasets. It was developed by NASA [^nasa] to handle large, heterogeneous and hirarchical datasets. The content of those files handles some analysis, some metadata and some more information that is stored on MusicBrainz (https://musicbrainz.org), an open music encyclopedia. The data availabla in 'AdditionalFiles' is going to be used for first hands on the whole dataset, to get to know the dataset since the access is simple. By doing so we will prevent some general information about the dataset. To read both datafolders one should install some additional packages that will be mentioned later on.
+
+For more information about the dataset especially about the frequent asked questions we recomend to go to (https://labrosa.ee.columbia.edu/millionsong/faq). 
+
+[^echo1]: TR+LETTERS + LETTERS&NUMBERS so the directorypath within the dataset is based on the first 3 letters after the 3rd one e.i 'MillionSong/data/A/D/H/TRADHRX12903CD3866.h5'
+[^nasa]: (National Aeronautics and Space Administration) https://www.nasa.gov/about/index.html page view [02.06.18]
 
 ## Preprocess the Additional files
 
-When accessing the data provided in 'AdditionalFiles' folder, one has to remove the Seperators \<SEP\> and replace those with a common seperator like ';' because R is used to a one byte seperator and therefor it is not possible to read a file with seperator \<SEP\>.
+When accessing the data provided in 'AdditionalFiles' folder, one has to remove the Seperators \<SEP\> and replace those with a common seperator like ';'. This should be done, because R is used to a one byte seperator and therefor it is not possible to read a file with a seperator like \<SEP\>.
 
-The following codechunk was only used to access the txt files and to load them into RStudio
+The following codechunk was only used to access the txt files in RStudio. This is done with \read.csv()
 
 
 ```{r importShow , warning=FALSE, echo=TRUE}
