@@ -62,6 +62,8 @@ The package 'wordcloud' is a very usefull one, and does provide a graphical repr
 [^Corpus1]: (https://cran.r-project.org/web/packages/tm/tm.pdf) page view [26.06.18]
 [^wordcl]: (https://cran.r-project.org/web/packages/wordcloud/wordcloud.pdf) page view [27.06.18]
 
+## Visualize artisnames
+
 ```{r wordclodArtist, echo=TRUE, cache=TRUE, warning=FALSE}
 # Load packages
 # library("NLP")
@@ -98,31 +100,31 @@ mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
 When looking at the wordcloud above one can see, that the most common artistnames are eather orchestr or John. Also there are some spanisch artist names containing words like los. This could be used for a better knowledge about the dataset. It is more clear that artists do not only come from england europe or the US but also from Spain or Latin America. One could of course get rid of the prepositions in all languages the dataset contains. Thus the preposition los would alse be wiped out.
 Some other names like Joe or King are also quite common used. To make some more assumptions and to get a better understanding of the wordcloud, the actual frequencies of the very frequent entries where provided in a table. 
 
-```{r = headWordclod, cache=TRUE, warning=FALSE}
+```{r  headArtist, cache=TRUE, warning=FALSE}
 # show only head of frequency dataFrame
 head(d,8)
 ```
 
-Together with this table and the wordcloud one could have a better understanding of the distribution of the artistnames in the given dataset. Now it is interesting to get some more facts about teh most common name John [°research] After a small search on the internet (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) one can see, that John was one of the most common names in the 1990's. 
+Together with this table and the wordcloud one could gain a better understanding of the distribution of the artistnames in the given dataset. Now it is interesting to get some more facts about the most common name John. After a small research on the internet [research] one can see, that John was one of the most common names in the 1990's. To proove, that this name occure mostly in the 1990's in the dataset one should take a closer look on those years.    
 
-[°research]: (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) page view [23.06.18]
+[^research]: (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) page view [23.06.18]
 
-```{r}
+```{r tracksPerYear}
 tracksPerYear$artistName[tracksPerYear$Year >= 1990 & tracksPerYear$Year <= 2000]
 ```
 After displaing the actual dataset and the entries of the artistnames between the years 1990 and 2000, the assumption made before should be declined. However one can see another common word in the displayed subset 'Los'. 
-The final statement about this set can not be well desribed but could be seen as a description of the given dataset without any further evidence. One statemnet is still appropriate. This dataset is distributet (after cleaning the dataset), like the wordcloud  and the table of frequencies is displaying it.
+This set needs to be more described and explored, because the previous exploration does not provide a lot of information.
 
+## Visualize songnames
+Almost the same analysis was done on common songnames. However the common words in this case where not quit the same as in the script before. The method to find common songnames was firstly plot the wordcloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it is obvious to delete those words. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the following wordcloud.
 
-Almost the same analysis we did on common songnames. However the common words in this case where not quit the same as in the script before. Finding the common songnames we had to plot the wordcloud as uncleaned version. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the followed wordcloud. Because we decided that those words don't contain a lot of information as well as they are common words in english language we cuted these word out of the provided dataset.
-
-```{r wordcloudSongname, warning=FALSE }
+```{r wordcloudSongname, warning=FALSE , cache=TRUE}
 # Load packages
-library("NLP")
-library("tm") # for text mining
-library("SnowballC") # for text stemming
-library("RColorBrewer") # color palettes
-library("wordcloud") # word-cloud generator 
+#library("NLP")
+#library("tm") # for text mining
+#library("SnowballC") # for text stemming
+#library("RColorBrewer") # color palettes
+#library("wordcloud") # word-cloud generator 
 
 docs1 <- Corpus(VectorSource(as.character(tracks$songName)))
 
@@ -143,16 +145,24 @@ d <- data.frame(word = names(v),freq=v)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
           max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"), main = "TITL")
 mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
+```
 
+Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is obvious that this dataset consists of Songnames that are more likely to handle Love and the counterpart of a Human, you. A general assumption could be, that there are more songs handling Love, the counterpart of someone and the live, then about technic or traveling for example. However this assumption can not be completle prooven since this dataset does not represent all the songnames in the world.  
+
+Also by looking at the folowing table, one can have a better and more detailed information about the distribution of the songnames.
+```{r headSong, warning=FALSE , cache=TRUE}
 head(d,7)
 ```
 
-Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is clear that this dataset consists of Songnames that are more likely to handle Love and the counterpart of a Human, you. A general assumption could be made, that there are more songs handling Love, the counterpart of someone and the live, then about technic or traveling for example. However this assumption can not be completle prooven since this dataset does not represent all the songnames in the world. 
+## Visualize artistlocations
 
+Since it is clear that the dataset not only contains artists from england or europe or the US, it would be nice to have a proper listing of the world together with the location of the artists. This can be achived through the package 'maps' [^map1]. This package provides not only a method to draw a map by accsessing it through a word like world but also by giving this method a border by longitude and latitude to get a closer look on different parts of it. It is easy to use and draw complex maps as well as set some points on the map. The worldmap below shows all artists with their locations. Unfortinately the dataset does not provide a location for each containing artist, but nevertheless it creates a good overview. 
+
+[^map1]: https://cran.r-project.org/web/packages/maps/maps.pdf page view [25.06.18]
 
 ```{r worldmapArtist , warning=FALSE}
 library(maps)
-library(mapdata)
+#library(mapdata)
 #library(eurostat)
 
 # parse the lat and lon values of given set 
@@ -168,7 +178,7 @@ coordinates <- as.data.frame(cbind(lon, lat))
 # take a closer look at europe 
 #europe <- as.data.frame(cbind(lon = c(54.78333, 24.08464, -31.26192, 59.34569), lat = c(80.56667, 34.83469, 39.45479, 62.21215)))
 
-map('world',c('.')) 
+map('world',c('.'), col = "grey80", fill = TRUE, border = "grey40") 
 points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
 
 #x <- map('world', xlim = range(europe$lon), ylim = range(europe$lat), namefield = TRUE)
