@@ -181,20 +181,28 @@ points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 ```
 
 # Analyze choosen Songs
-As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this one should be able to read in, the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' that helps accessing the datafiles and get the information out to analize it.
+As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this one should be able to read in, the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' [^package2] that helps accessing the datafiles and get the information out to analize it. 
+The chossen data is a preferation of a person of our group. The songs he choosed are ordered as followed:
+- Beynonce Single Ladies
+- Justin Timberlake What Goes Arround Comes Arround
+- Kanye West / Lupe Fiasco Touch The Sky
+- Madonna Jump
+
+
+As described below there are two methods to do so.The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output underneath.
+
+[^package2]: load < source("http://bioconductor.org/biocLite.R"); biocLite("rhdf5") >
+
 
 ```{r, warning=FALSE}
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("rhdf5")
 library(tcltk) # for interactive file choosing
 library(rhdf5) # required for H5 files
+
 
 # pathToSet <- tk_choose.dir(default = "", caption = "Select directory")
 
 # set a hardcoded Path to the MillionSongSubset
 pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
-
-
 
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
@@ -208,14 +216,16 @@ SubPaths <- lapply(TrackIDs,function(x){
 SubPaths <- data.frame(SubPaths = t(unlist(SubPaths)))
 names(SubPaths) <- c('beyonce', 'justin', 'kanye', 'madonna', 'bruno')
 
-
 # read the H5 files and create a readable output
 artist <- lapply(SubPaths, function(x){
   h5ls(toString(x))
 })
 
+head(artist$beyonce,6)
+```
 
-
+```{r}
+library(fmsb) # for radar charts
 Analyze_song <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/songs")
 })
@@ -226,7 +236,7 @@ Meta_song <- apply(SubPaths,2,function(x){
 })
 Meta_song <- do.call(rbind, Meta_song)
 
-library(fmsb)
+
 
 radarFrame <- function(df1, df2){
   matrix <- cbind('artist_familiarity' = df1$artist_familiarity, 'artist_hotttnesss' = df1$artist_hotttnesss, 'tempo'= df2$tempo, 'time_signature' = df2$time_signature, 'loudness' = df2$loudness, 'key' = df2$key) 
