@@ -183,10 +183,15 @@ points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 # Analyse choosen Songs
 As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this, one should be able to read in the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' [^package2] that helps accessing the datafiles and get the information out to analize it. 
 The chossen data is a preferation of a person of our group. The songs he choosed are ordered as followed:  <br />
+
 - Beynonce Single Ladies TrackID: TRAPZTV128F92CAA4E  <br />
+
 - Justin Timberlake What Goes Arround Comes Arround TrackID: TRANNZZ128F92C22F7  <br />
+
 - Kanye West / Lupe Fiasco Touch The Sky TrackID: TRAQZQX128F931338F  <br />
+
 - Madonna Jump TrackID: TRALONM128EF35A199  <br />
+
 - B.o.B Nothin on You feat Bruno Mars TrackID: TRAWBHE12903CBC4CB  <br />
 
 Taking the TrackID that functions also as the filename, one should first find out the right paths to the prefered files to access them. After creating the right path one should be able to access the data throug some methods. As described below there are two methods to read in data. The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output for h5ls() underneath.
@@ -248,15 +253,49 @@ Both tables will be used and combined on different variables. What also draws at
 First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Therefor one needs to make some further detailed analysis on the given data. Finally one should be able to predict any given song if it fits the calculated results and the predicted song would be recomended to that person. 
 
 ## Data discription 
-By looking at the data without any knowledge in beforehand, one should unerstand each an every variable. Since this has been done allready we will concentrate on the choosen variables and describe those. <br \>
+By looking at the data without any knowledge in beforehand, one should understand each an every variable. Since this has been done allready we will concentrate on the choosen variables and describe those. <br \>
 Variables: <br \>
-- Tempo: Indicates the speed of a beat and is also known as Beats per Minute (BPM). This is a basic unit of time in music. Now it is important to understand what exactly a beat is. To simplify the statement it is the rythm when a listener would tap his toe to a music sequence [^wiki3]. BPM Examples are 60 BPM would be a beat per second and 120 BPM would be 2 beats per second [^înfo1]. <br \>
-- Key: The Key 
-Loudness
+
+- Tempo: Indicates the speed of a beat and is also known as Beats per Minute (BPM). It is derived directly from avarage beat duration [^înfo2]. This is a basic unit of time in music. Now it is important to understand what exactly a beat is. To simplify the statement it is the rythm when a listener would tap his toe to a music sequence [^wiki3]. BPM Examples are 60 BPM would be a beat per second and 120 BPM would be 2 beats per second [^înfo1]. <br \>
+
+- Loudness: This indicates the overall loudness of a track in decibels (dB) and is avaraged across a track in this dataset. The Loudness is correlated with the physical strength   In the given dataset the Loudnes is avareged across a track [^înfo2]. <br \>
+
+- Mode: In the theory of Western music, a mode is a type of musical scale coupled with a set of characteristic melodic behaviors. [^wiki4]. To simplify this statement a mode could be seen a s the vocabulary of a melody. It specifies which notes can be used and indicates which have special importance [^înfo3]. Mostly Major notes sound happy and Minor notes does not [^spotify] <br \>
+
+- Key: The Key of a song refers to a tonal center of it and will also determine what notes and chords a song should use [^spotify]. The key also identifies the tonic triad, the chord, major or minor, which represents the final point of rest of a piece [^înfo2]. An example of a key could be C C# D E F G etc.<br \>
+
+- Time Signature: The time signature, also known as meter signature, is a notational convention to specify how many beats are in each bar [^înfo2]. So now it is important to understand what exactly a bar is. A bar (or measure) is a segment of time corresponding to a specific number of beats in which each beat is represented by a particular note value and the boundaries of the bar are indicated by vertical bar lines [^wiki5].
+
+![https://en.wikipedia.org/wiki/Bar_(music)](./picturesDocu/970px-Barlines.svg.png)
+ 
+ as can be seen in the picture above, a bar could be simplified through a vertical line in music notes. <br \>
+
+- Segment Pitch: A Pitch is a position of a single sound in the complete range of sound. Sounds are higher or lower in pitch according to the frequency of vibration of the sound waves producing them [^info3]. For a better understanding one should take a look on the further picture. But also one should have a better understanding of a segment. A segment is a set of sound entities, typically under a second, each relatively uniform in timbre and harmony. Segments are characterized by their perceptual onsets and duration in seconds, loudness (dB), pitch and timbral content [^înfo2].
+
+![https://nuartapp.wordpress.com/2014/07/20/elements-of-music/](./picturesDocu/pitch.gif) 
+
+<br \>
+- Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notion also referred to as sound color, texture, or tone quality [^înfo2]. <br \>
 
 
 [^wiki3]: https://en.wikipedia.org/wiki/Beat_(music) page view [04.07.18]
 [^înfo1]: https://www.rhythm-in-music.com/introduction-beat-and-tempo.html page view [04.07.18]
+[^înfo2]: http://docs.echonest.com.s3-website-us-east-1.amazonaws.com/_static/AnalyzeDocumentation.pdf page view [01.07.18]
+[^wiki4]: https://en.wikipedia.org/wiki/Mode_(music) page view [01.07.18]
+[^înfo3]: https://www.britannica.com/art/mode-music page view [04.07.18]
+[^spotify]: https://insights.spotify.com/it/2015/05/06/most-popular-keys-on-spotify/ page view [04.07.18]
+[^wiki5]: https://en.wikipedia.org/wiki/Bar_(music) page view [04.07.18]
+[^info3]: https://www.britannica.com/art/pitch-music page view [04.07.18]
+
+### Describing relations between the variables
+
+With all the provided information in the section above, one can derive a more specific representation of all the variables as well as a relationship between them. As can be seen below and also written in various articles, specialy on spotify, Emotion is a very important characteristic of music. Mostly people listen to music when they are sad or happy or try to project their feelings on to it. Therefor Emotion does have specific role when talking about music [^spotify]. In addition to that there is also the Genre of a song and even an artist, that is depending on other variables. It is also a very important characteristic that can predict a listeners favour. Mostly people tend to listen to one or two particular genres. For sure there are more overall variables like Emotion and Genre, but for now we limit ourself to only those two.  
+
+![Self created picture for the relationship between the variables](./picturesDocu/Variable.jpg)
+
+As provided by the image above, that was created by ourself the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for Emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the Key and the mode. As mentiond in the section Data discription especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that Key as well is a reliable source for measuring the Emotion, since it does correlate with the mode. Also the pitch is corresponding to one of the 12 keys and is therefor a reliable source for Emotions too.   
+
+
 
 ```{r }
 # radarFrame <- function(df1, df2){
@@ -416,8 +455,24 @@ The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example
 - Nehme eine Menge an Songs die uns gut gefallen schau sie dir an 
 - nehme eine weiter menge vergleiche diese miteinander und höre sie dir an und gib dein final ergebnis 
 
-# Sources
+# Sources and Footnotes
 
-european limits : http://www.milanor.net/blog/maps-in-r-introduction-drawing-the-map-of-europe/
-vergleichseiten: http://www.findsongtempo.com und http://www.tunebat.com
+european map limits to draw with R: http://www.milanor.net/blog/maps-in-r-introduction-drawing-the-map-of-europe/
+
+comparison site: https://tunebat.com/
+
+research: 
+
+- https://www.musical-u.com/learn/rhythm-tips-for-identifying-music-genres-by-ear/
+- https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4971092/
+- http://www.ee.columbia.edu/~dliang/files/FINAL.pdf
+- https://www.quora.com/How-does-Spotify-estimate-the-valence-of-a-song
+- https://techcrunch.com/2014/10/19/the-sonic-mad-scientists/
+
+on Key:
+
+- https://ledgernote.com/blog/lessons/musical-key-characteristics-emotions/
+
+
+
 
