@@ -180,25 +180,25 @@ map(col = "grey80", border = "grey40", fill = TRUE,
 points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 ```
 
-# Analyze choosen Songs
-As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this one should be able to read in, the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' [^package2] that helps accessing the datafiles and get the information out to analize it. 
-The chossen data is a preferation of a person of our group. The songs he choosed are ordered as followed:
-- Beynonce Single Ladies
-- Justin Timberlake What Goes Arround Comes Arround
-- Kanye West / Lupe Fiasco Touch The Sky
-- Madonna Jump
+# Analyse choosen Songs
+As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this, one should be able to read in the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' [^package2] that helps accessing the datafiles and get the information out to analize it. 
+The chossen data is a preferation of a person of our group. The songs he choosed are ordered as followed:  <br />
+- Beynonce Single Ladies TrackID: TRAPZTV128F92CAA4E  <br />
+- Justin Timberlake What Goes Arround Comes Arround TrackID: TRANNZZ128F92C22F7  <br />
+- Kanye West / Lupe Fiasco Touch The Sky TrackID: TRAQZQX128F931338F  <br />
+- Madonna Jump TrackID: TRALONM128EF35A199  <br />
+- B.o.B Nothin on You feat Bruno Mars TrackID: TRAWBHE12903CBC4CB  <br />
 
-
-As described below there are two methods to do so.The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output underneath.
+Taking the TrackID that functions also as the filename, one should first find out the right paths to the prefered files to access them. After creating the right path one should be able to access the data throug some methods. As described below there are two methods to read in data. The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output for h5ls() underneath.
 
 [^package2]: load < source("http://bioconductor.org/biocLite.R"); biocLite("rhdf5") >
-
 
 ```{r, warning=FALSE}
 library(tcltk) # for interactive file choosing
 library(rhdf5) # required for H5 files
 
-
+# dynamic path 
+# important to have the MIllion Song Data subset downloaded
 # pathToSet <- tk_choose.dir(default = "", caption = "Select directory")
 
 # set a hardcoded Path to the MillionSongSubset
@@ -221,8 +221,11 @@ artist <- lapply(SubPaths, function(x){
   h5ls(toString(x))
 })
 
-head(artist$beyonce,6)
+head(artist$beyonce,23)
 ```
+
+This slice shows that there are different groups and even different subgroups one can access through h5read().
+An example of the final data of beyonces song of group analysis and metadata can be seen underneath.
 
 ```{r}
 library(fmsb) # for radar charts
@@ -236,13 +239,38 @@ Meta_song <- apply(SubPaths,2,function(x){
 })
 Meta_song <- do.call(rbind, Meta_song)
 
+# example to show and see the entries of subgroups 
+t(Analyze_song['beyonce',])
+t(Meta_song['beyonce',])
+```
+Both tables will be used and combined on different variables. What also draws atention is the sparse vektors in the table above. Obviously one should get rid of those and just use the other variables for comparison.
+
+First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Therefor one needs to make some further detailed analysis on the given data. Finally one should be able to predict any given song if it fits the calculated results and the predicted song would be recomended to that person. 
+
+## Data discription 
+By looking at the data without any knowledge in beforehand, one should unerstand each an every variable. Since this has been done allready we will concentrate on the choosen variables and describe those. <br \>
+Variables: <br \>
+- Tempo: Indicates the speed of a beat and is also known as Beats per Minute (BPM). This is a basic unit of time in music. Now it is important to understand what exactly a beat is. To simplify the statement it is the rythm when a listener would tap his toe to a music sequence [^wiki3]. BPM Examples are 60 BPM would be a beat per second and 120 BPM would be 2 beats per second [^înfo1]. <br \>
+- Key: The Key 
+Loudness
 
 
-radarFrame <- function(df1, df2){
-  matrix <- cbind('artist_familiarity' = df1$artist_familiarity, 'artist_hotttnesss' = df1$artist_hotttnesss, 'tempo'= df2$tempo, 'time_signature' = df2$time_signature, 'loudness' = df2$loudness, 'key' = df2$key) 
-  rownames(matrix) <- rownames(df1)
+[^wiki3]: https://en.wikipedia.org/wiki/Beat_(music) page view [04.07.18]
+[^înfo1]: https://www.rhythm-in-music.com/introduction-beat-and-tempo.html page view [04.07.18]
+
+```{r }
+# radarFrame <- function(df1, df2){
+#   matrix <- cbind('artist_familiarity' = df1$artist_familiarity, 'artist_hotttnesss' = df1$artist_hotttnesss, 'tempo'= df2$tempo, 'time_signature' = df2$time_signature, 'loudness' = df2$loudness, 'key' = df2$key) 
+#   rownames(matrix) <- rownames(df1)
+#   matrix <- data.frame(matrix)
+# }
+
+radarFrame <- function(df2){
+  matrix <- cbind('tempo'= df2$tempo, 'loudness' = df2$loudness, 'mode' = df2$mode, 'key' = df2$key) 
+  rownames(matrix) <- rownames(df2)
   matrix <- data.frame(matrix)
 }
+
 
 namesLegend <- paste(Meta_song$artist_name,Meta_song$title)
 
@@ -261,7 +289,7 @@ radar <- function(df, namesLeg = namesLegend, x = -2.8 , y= -1.1){
 legend(x,y, legend = namesLeg, bty = "n", pch=20 , col=1:dim(df)[1] , cex=0.8, pt.cex=2)
 }
 
-data <- radarFrame(Meta_song, Analyze_song)
+data <- radarFrame(Analyze_song)
 
 radar(data)
 # anschauen für radar 
@@ -279,14 +307,19 @@ radar(data)
 ```
 ```{r}
 
+
+#create radar chart from tunebat
 compareFrame <- data.frame(rbind(
-  beyonce = c('familiarity' = 70, 'tempo' = 97, 'time_signature' = 4, 'loudness' = -5,'key' = 1),
-  justin = c('familiarity' = 70, 'tempo' = 76, 'time_signature' = 4, 'loudness' = -5,'key' = 7),
-  kanye = c('familiarity' = 65, 'tempo' = 106, 'time_signature' = 4, 'loudness' = -5,'key' = 9),
-  madonna = c('familiarity' = 54, 'tempo' = 119, 'time_signature' = 4, 'loudness' = -7,'key' = 9),
-  bruno = c('familiarity' = 70, 'tempo' = 104, 'time_signature' = 4, 'loudness' = -6,'key' = 10)
+  beyonce = c('tempo' = 97, 'loudness' = -5, 'mode' = 0, 'key' = 11),
+  justin = c( 'tempo' = 76, 'loudness' = -5, 'mode' = 1, 'key' = 7),
+  kanye = c( 'tempo' = 106, 'loudness' = -5, 'mode' = 1,'key' = 9),
+  madonna = c('tempo' = 130, 'loudness' = -8, 'mode' = 0,'key' = 4),
+  bruno = c('tempo' = 104, 'loudness' = -6, 'mode' = 1, 'key' = 10)
 ))
 
+Analyze_song['bruno',]
+
+Meta_song['bruno',]
 # because all timesignatuires are 4, there is no proper graph 
 # radarchart draws relatively
 radar(compareFrame)
@@ -295,18 +328,14 @@ radar(compareFrame)
 # not realy comparable as seen
 par(mfrow = c(1,2))
 radar(data,x=-2.2, y = -1.2)
-radar(compareFrame,x=-2.2)
+radar(compareFrame,x=-2.2,  y = -1.2)
 par(mfrow = c(1,1))
 
 
 
 ```
 
-beyonce trackid TRAPZTV128F92CAA4E
-justin trackid TRANNZZ128F92C22F7
-kanye trackid TRAQZQX128F931338F
-madonna trackid TRALONM128EF35A199
-bruno mars  TRAWBHE12903CBC4CB
+
 
 ```{r}
 # library(fmsb)
