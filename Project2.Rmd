@@ -244,6 +244,11 @@ Meta_song <- apply(SubPaths,2,function(x){
 })
 Meta_song <- do.call(rbind, Meta_song)
 
+# will be used in PCA for ploting timbre
+track_timbre <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_timbre")
+})
+
 # example to show and see the entries of subgroups 
 t(Analyze_song['beyonce',])
 t(Meta_song['beyonce',])
@@ -303,6 +308,8 @@ As can be seen in this image too, the tempo does provide as well the emotion as 
 
 ## Finding similarities
 
+### General comparison
+
 Since there is enough information about the choosen variables one should attend to get a better overview about the songs. Hence our group chosed the followed variables to compare the songs.
 
 - Loudness 
@@ -351,7 +358,7 @@ data <- radarFrame(Analyze_song)
 radar(data)
 ```
 
-Looking at the plotted characteristics one can not see a real dependency or even a good pattern. Mostly because the songs tend to be similar, since a listener prefers them, but not in the ploted variables. Nevertheles this variables can be used to make assumptions for other statements. Also this variables are ploted relativle to each other and not with static dimensions.
+Looking at the plotted characteristics one can not see a real dependency or even a realy good pattern. Mostly because the songs tend to be similar, since a listener prefers them, but not in all ploted variables. One could assume that key and tenpo tend to build clusters. Hence this variables will be taken for a closer look. Nevertheles all variables can be used to make assumptions for other statements. Also this variables are ploted relativle to each other and not with static dimensions. Therefor there will be a static plot provided.
 
 The plot above will be compared with same variables for similar songs but on an other platform. The comparison platform is https://tunebat.com/. Tunebat seems to rely on spotify web API, where it accesses Spotify songs and creates similar charactaristics. The image below concretisises the dependencies and the hirarchical time line between the platforms. Thus the platform THE ECHO NEST was the first and was bought by and merged to spotify. Spotify provides an API that Tunebat uses.
 
@@ -359,7 +366,7 @@ The plot above will be compared with same variables for similar songs but on an 
 
 It is not clear weather both platforms can be compared. The intension to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. So Tunebat provides those values. But first one should compare the given songs and find out if Tunebat could be used for such a comparison. 
 
-What also  should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset is not correct.
+What also  should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset for Justin Timberlake is not correct.
 
 ```{r compareTunebat, warning = FALSE}
 # create radar chart from tunebat.com 
@@ -380,39 +387,38 @@ compareFrame <- data.frame(rbind(
 par(mfrow = c(1,2))
 radar(data,x=-2.2, y = -1.2)
 radar(compareFrame,x=-2.2,  y = -1.2)
+title('Comparison between MSD and Tunebat', outer = TRUE, line = -1)
 par(mfrow = c(1,1))
 }
 ```
-When comparing the two platforms it 
+
+When comparing the two platforms it seems that the songs do not have any similarities. This could be described through the song data. 
+
+Artists do create songs, but sometimes there are many versions of those songs and it is hard to find the right one to compare them. Even if the songname is the same it could be modifyed. So in this case that explanation could fit, or simply that either the first or the second dataset is falsified. Since both platforms are not comparable the data from the second platform, Tunebat could be rejected. We will restrict ourseves only to the data provided from MSD. 
 
 
+### Detailed comparrison
 
+Since it is not possible to take a closer look on dancability or hapiness of a song, provided by tunebat, we restricted ourselves to the MSD dataset and the provided information in that data. However this information can be be approached through variables in the MSD dataset. Our focus will be on 'artist_familiarity', 'artist_hotnesss', 'key' and 'tempo'. 
 
-# compare Songs with preferation
-
-look at 
-
-- artist familiarity
-- artist hottness
-- key 
-- tempo
-
-
-```{r actual}
-
-# MSD Songs for detailed comparison 
+The new strategie, since it is hard to compare the variables is, to take the prefered songs and the variables and to average them for further predictions and comparisons. First it would be nice to have a Barplot for each prefered song and each taken variable, as mentioned before.
+```{r MSDBarplots, warning = FALSE}
+# Overall Barplot function for any dataframe  
 crateBarplotOfFrame <- function(x,y, NameP, rownames = FALSE){
   barplot(x[,y], main = y, col = 1:dim(x)[1], horiz = TRUE, names.arg= if(rownames){row.names(NameP)}else{names(NameP)}, cex.names=0.8, las = 1)
 }
 
-
+# Bar plots for MSD
 par(mfrow =c(2,2))
 crateBarplotOfFrame(Meta_song,'artist_familiarity', SubPaths)
 crateBarplotOfFrame(Meta_song,'artist_hotttnesss', SubPaths)
 crateBarplotOfFrame(Analyze_song,'tempo', SubPaths)
 crateBarplotOfFrame(Analyze_song,'key', SubPaths)
+title('Barplots for choosen songs and variables', outer = TRUE, line = - 1)
 par(mfrow =c(1,1))
+```
 
+```{r}
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAZWGK128F93141E3','TRBDOVF128E0795641','TRAAKDG128F42A0ECB'))
 
@@ -441,8 +447,7 @@ R_Meta_song <- do.call(rbind, R_Meta_song)
 P_songs <- cbind('artist_familiarity' =  mean(Meta_song$artist_familiarity), 'artist_hotttnesss' = mean(Meta_song$artist_hotttnesss), 'tempo' = mean(Analyze_song$tempo),  'key' = mean(Analyze_song$key))
 R_songs <- cbind('artist_familiarity' = R_Meta_song$artist_familiarity, 'artist_hotttnesss' = R_Meta_song$artist_hotttnesss, 'tempo' = R_Analyze_song$tempo, 'key' = R_Analyze_song$key)
 
-all_songs <- rbind(P_songs,R_songs)
-MSD_R <- data.frame(all_songs, row.names = c("p_avg",row.names(R_Meta_song)[1:3]))
+MSD_R <- data.frame(rbind(P_songs,R_songs), row.names = c("p_avg",row.names(R_Meta_song)[1:3]))
 
 par(mfrow = c(2,2))
 crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
@@ -450,7 +455,9 @@ crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
 crateBarplotOfFrame(R_Analyze_song,'key', SubPaths)
 par(mfrow = c(1,1))
+```
 
+```{r Boxplot}
 crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
   boxplot(x[,y], las = 2 , main= y, ylim=c(limStart,limEnd))
 abline(h=xDerive[,y], col =2:(dim(xDerive)[1]+1))
@@ -462,6 +469,84 @@ crateBoxplotOfFrame(Meta_song,'artist_familiarity',R_Meta_song,0.7,1)
 crateBoxplotOfFrame(Meta_song,'artist_hotttnesss',R_Meta_song,0.5,0.9)
 crateBoxplotOfFrame(Analyze_song,'tempo',R_Analyze_song,80,130)
 par(mfrow = c(1,1))
+```
+```{r PCA}
+#############################
+
+#playlist
+
+
+mean_timbre <- NULL
+for(i in names(track_timbre)){
+  res <- apply(track_timbre[[i]],1,mean)
+  mean_timbre <- rbind(mean_timbre,res)
+}
+
+par(mar=c(5,5,4,2))
+row.names(mean_timbre) <- names(track_timbre)
+plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50))
+text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
+
+#timbre recommended song
+R_track_timbre <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_timbre")
+})
+
+R_mean_timbre <- NULL
+for(i in names(R_track_timbre)){
+  res <- apply(R_track_timbre[[i]],1,mean)
+  R_mean_timbre <- rbind(R_mean_timbre,res)
+}
+dim(R_mean_timbre)
+par(mar=c(5,5,4,2))
+row.names(R_mean_timbre) <- names(R_track_timbre)
+R_mean_timbre
+points(R_mean_timbre[,1], R_mean_timbre[,2], pch=21,  bg="lightgreen")
+text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex= 0.7, pos=3)
+
+
+
+#plot pitch pca
+track_pitch <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_pitches")
+})
+
+mean_pitch <- NULL
+for(i in names(track_pitch)){
+  #pca
+  pr <-prcomp(t(track_pitch[[i]]),scale=TRUE)
+  
+  #mean from pca
+  res <- apply(t(pr$x),1,mean)
+  mean_pitch <- rbind(mean_pitch,res)
+}
+dim(mean_pitch)
+par(mar=c(5,6,4,2))
+row.names(mean_pitch) <- names(track_pitch)
+plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="")
+text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
+title(xlab="pc1",ylab="pc2", mgp=c(4,1,0))
+
+#pitch recommended songs
+R_track_pitch <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_pitches")
+})
+R_mean_pitch <- NULL
+for(i in names(R_track_pitch)){
+  #pca
+  pr <-prcomp(t(R_track_pitch[[i]]),scale=TRUE)
+  
+  #mean from pca
+  res <- apply(t(pr$x),1,mean)
+  R_mean_pitch <- rbind(R_mean_pitch,res)
+}
+dim(R_mean_pitch)
+par(mar=c(5,5,4,2))
+row.names(R_mean_pitch) <- names(R_track_pitch)
+points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
+text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
+
+
 
 ```
 
