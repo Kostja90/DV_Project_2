@@ -249,6 +249,10 @@ track_timbre <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/segments_timbre")
 })
 
+# will be used in PCA for ploting pitch
+track_pitch <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/segments_pitches")
+})
 # example to show and see the entries of subgroups 
 t(Analyze_song['beyonce',])
 t(Meta_song['beyonce',])
@@ -280,7 +284,7 @@ Variables: <br \>
 ![https://nuartapp.wordpress.com/2014/07/20/elements-of-music/](./picturesDocu/pitch.gif) 
 
 <br \>
-- Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notion also referred to as sound color, texture, or tone quality [^înfo2]. The Echo Nest Analyzer’s timbre feature is a vector that includes 12 unbounded values roughly centered around 0. For completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc. [^înfo2]<br \>
+- Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notation also referred to as sound color, texture, or tone quality [^înfo2]. The Echo Nest Analyzer’s timbre feature is a vector that includes 12 unbounded values roughly centered around 0. This is represented as 12-dimensional vectors that are the principal components of Mel-frequency cepstral co- efficients (MFCCs). They represent the power spectrum of sound, and are derived from Fourier analysis and further processing [^doku4]. For completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc [^înfo2]. <br \>
 
 - artist familiarity
 
@@ -294,6 +298,7 @@ Variables: <br \>
 [^spotify]: https://insights.spotify.com/it/2015/05/06/most-popular-keys-on-spotify/ page view [04.07.18]
 [^wiki5]: https://en.wikipedia.org/wiki/Bar_(music) page view [04.07.18]
 [^info4]: https://www.britannica.com/art/pitch-music page view [04.07.18]
+[^doku4]: http://www.ee.columbia.edu/~dliang/files/FINAL.pdf page view [06.07.18]
 
 ### Describing relations between the variables
 
@@ -408,17 +413,21 @@ crateBarplotOfFrame <- function(x,y, NameP, rownames = FALSE){
   barplot(x[,y], main = y, col = 1:dim(x)[1], horiz = TRUE, names.arg= if(rownames){row.names(NameP)}else{names(NameP)}, cex.names=0.8, las = 1)
 }
 
+{
 # Bar plots for MSD
 par(mfrow =c(2,2))
 crateBarplotOfFrame(Meta_song,'artist_familiarity', SubPaths)
 crateBarplotOfFrame(Meta_song,'artist_hotttnesss', SubPaths)
 crateBarplotOfFrame(Analyze_song,'tempo', SubPaths)
 crateBarplotOfFrame(Analyze_song,'key', SubPaths)
-title('Barplots for choosen songs and variables', outer = TRUE, line = - 1)
+title('Barplots for choosen songs and variables', outer = TRUE, line = - 15)
 par(mfrow =c(1,1))
+}
 ```
 
-```{r}
+Now one can see directly the differences between each variable an deach song. The given artist familiarity
+
+```{r RecomendBoxplots, warning = FALSE}
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAZWGK128F93141E3','TRBDOVF128E0795641','TRAAKDG128F42A0ECB'))
 
@@ -449,105 +458,93 @@ R_songs <- cbind('artist_familiarity' = R_Meta_song$artist_familiarity, 'artist_
 
 MSD_R <- data.frame(rbind(P_songs,R_songs), row.names = c("p_avg",row.names(R_Meta_song)[1:3]))
 
+{
 par(mfrow = c(2,2))
 crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
 crateBarplotOfFrame(R_Analyze_song,'key', SubPaths)
+title(main = 'Spotify recomended titles with average of prefered Songs', outer = TRUE, line = -15)
 par(mfrow = c(1,1))
+}
 ```
 
-```{r Boxplot}
+```{r Boxplot, warning = FALSE}
 crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
   boxplot(x[,y], las = 2 , main= y, ylim=c(limStart,limEnd))
 abline(h=xDerive[,y], col =2:(dim(xDerive)[1]+1))
 axis(1, labels=c("playlist"), at=1, las=1)
 }
 
+{
 layout(matrix(c(1,2,1,3),2,2,byrow = TRUE))
 crateBoxplotOfFrame(Meta_song,'artist_familiarity',R_Meta_song,0.7,1)
 crateBoxplotOfFrame(Meta_song,'artist_hotttnesss',R_Meta_song,0.5,0.9)
 crateBoxplotOfFrame(Analyze_song,'tempo',R_Analyze_song,80,130)
+title(main = 'boxplots for confidence', outer = TRUE, line = -1)
 par(mfrow = c(1,1))
+}
 ```
-```{r PCA}
+
+
+```{r PCATimbre, warning = FALSE}
 #############################
 
-#playlist
+# averaged timbre of prefered songs
+mean_timbre <- t(sapply(track_timbre, function(x){apply(x,1,mean)} ))
 
-
-mean_timbre <- NULL
-for(i in names(track_timbre)){
-  res <- apply(track_timbre[[i]],1,mean)
-  mean_timbre <- rbind(mean_timbre,res)
-}
-
-par(mar=c(5,5,4,2))
-row.names(mean_timbre) <- names(track_timbre)
-plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50))
-text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
-
-#timbre recommended song
+# timbre recommended song
 R_track_timbre <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/segments_timbre")
 })
 
-R_mean_timbre <- NULL
-for(i in names(R_track_timbre)){
-  res <- apply(R_track_timbre[[i]],1,mean)
-  R_mean_timbre <- rbind(R_mean_timbre,res)
-}
-dim(R_mean_timbre)
-par(mar=c(5,5,4,2))
-row.names(R_mean_timbre) <- names(R_track_timbre)
-R_mean_timbre
+# recomended songs averaged
+R_mean_timbre <- t(sapply(R_track_timbre, function(x){apply(x,1,mean)} ))
+
+# plot of recomended timbre and prefered songs timbre
+#par(mar=c(5,5,4,2))
+plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50), xlab = 'timbre PC1 =  average loudness of the segments averaged', ylab = 'timbre PC2 = brightness')
+text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
 points(R_mean_timbre[,1], R_mean_timbre[,2], pch=21,  bg="lightgreen")
 text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex= 0.7, pos=3)
+title(main = 'PCA timbre for recomended and preferden Songs')
+```
 
-
-
-#plot pitch pca
-track_pitch <- apply(SubPaths,2,function(x){
-  h5read(x,"/analysis/segments_pitches")
-})
-
+```{r PCAPitch, warning = FALSE}
+# averaged pitch of prefered songs
 mean_pitch <- NULL
 for(i in names(track_pitch)){
   #pca
   pr <-prcomp(t(track_pitch[[i]]),scale=TRUE)
-  
   #mean from pca
   res <- apply(t(pr$x),1,mean)
   mean_pitch <- rbind(mean_pitch,res)
 }
-dim(mean_pitch)
-par(mar=c(5,6,4,2))
 row.names(mean_pitch) <- names(track_pitch)
-plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="")
-text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
-title(xlab="pc1",ylab="pc2", mgp=c(4,1,0))
 
-#pitch recommended songs
+# pitch recommended songs
 R_track_pitch <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/segments_pitches")
 })
+
+# averaged pitch of recomended songs
 R_mean_pitch <- NULL
 for(i in names(R_track_pitch)){
   #pca
   pr <-prcomp(t(R_track_pitch[[i]]),scale=TRUE)
-  
   #mean from pca
   res <- apply(t(pr$x),1,mean)
   R_mean_pitch <- rbind(R_mean_pitch,res)
 }
-dim(R_mean_pitch)
-par(mar=c(5,5,4,2))
 row.names(R_mean_pitch) <- names(R_track_pitch)
+
+# plot of recomended pitch and prefered songs pitch
+par(mar=c(5,6,3,2))
+plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="" ,ylim = c(-6e-17,6e-17), xlim = c(-1.4e-16,5e-17))
+text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
+title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recomended and preferden Songs')
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
-
-
-
 ```
 
 
