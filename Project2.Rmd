@@ -15,30 +15,31 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 ```
 
 # Introduction
-As required, this task was an open one, so the students had to choose a specific topic on their own. Our Group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset Contains 10k Music files and is around 2GB big. The actual dataset is about 300GB big and has arround 1 MIllion entries, in this case songs. Besids the Analysis, the dataset includes some Metadata, like Author, produced year etc. and finally music data features for each song in HDF5 format. The actual Provider of this data set is THE ECHO NEST (http://the.echonest.com), which used to be a music intelligence and data platform for developers until Spotify (https://www.spotify.com/de/), a famous music streaming provider, acquired The Echo Nest.[^wiki1]
+As required, this task was an open one, so the students had to choose a specific topic on their own. Our group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset contains 10k music files and is around 2GB. The actual dataset is about 300GB and has around 1 million entries. In this case these are songs. Besides the analysis, the dataset includes some metadata, like the author, the year of production and so forth. As its center piece it features music data for each song in HDF5 format. The actual provider of this data set is THE ECHO NEST (http://the.echonest.com), which used to be a music intelligence and data platform for developers until Spotify (https://www.spotify.com/de/), a famous music streaming provider, acquired The Echo Nest.[^wiki1]
 As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). [^Labinfo1]
 
-Our goal in this Project is going to be an analysis of some songfiles that we prefer. Since all of the musicfiles are labeled with artist- and songnames as well as the year of production,  we can  find allmost every song eather on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). First we are going to listen to some of the songs to find the ones that we prefer. Further, we are going to analyze that songs to have a good understanding of data that describes our preferation. Last we are going to use spotify for prediction. Thus we hope for a better analysis and understanding of the given data. Otherwise we would be comparing mostly different data that is not suitable for research purposes.
+Our goal is going to be an analysis of specific files of our favorite songs. Since all of the music files are labeled with artist- and songnames, as well as the year of production, we were able to find almost every song either on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). 
+After selecting our prefered songs, we are going to analyze these songs to get a good understanding of the data that describes our preference. Lastly we are going to use spotify for prediction. As a result we hope for a more thorough analysis and understanding of the given data. If this step would be left out, we would be comparing very different data that is not suitable for research purposes.
 
-Alongside with the above analysis we also want to have some more general information about the artists and their songs. Therefore we are going to visualize some general information too. 
+Alongside with the above analysis our goal is to get some more general information about the artists and their songs. Therefore we are going to visualize general information as well. 
 
 [^wiki1]: https://en.wikipedia.org/wiki/The_Echo_Nest page view [02.07.18]
 [^Labinfo1]: https://labrosa.ee.columbia.edu/millionsong/ page view [02.07.18]
 
 
 # Handle the downloaded data
-After downloading and unzipping the data, one can see two different folders. The first one, 'data', containing several other folders and the second one 'AdditionalFiles', containing some adittional files in either SQL or txt format. The directory structure is based on The Echo Nest Track IDs [^echo1]. The 'data' folder contains exlusively songfiles in HDF5 (Hirarchical Data Format 5) format. This format is mostly used in science apllications for big datasets. It was developed by NASA [^nasa] to handle large, heterogeneous and hirarchical datasets. The content of those files handles some analysis, some metadata and some more information that is stored on MusicBrainz (https://musicbrainz.org), an open music encyclopedia. The data availabla in 'AdditionalFiles' is going to be used for first hands on the whole dataset, to get to know the dataset since the access is simple. By doing so we will prevent some general information about the dataset. To read both datafolders one should install some additional packages that will be mentioned later on.
+After downloading and unzipping the data, one can see two different folders. The first one, 'data', containing several other folders and the second one 'AdditionalFiles', containing some adittional files in either SQL or txt format. The directory structure is based on The Echo Nest Track IDs [^echo1]. The 'data' folder contains exlusively songfiles in HDF5 (Hirarchical Data Format 5) format. This format is mostly used in science applications for big datasets. It was developed by NASA [^nasa] to handle large, heterogeneous and hirarchical datasets. The content of those files handles some analysis, some metadata and some more information that is stored on MusicBrainz (https://musicbrainz.org), an open music encyclopedia. The data available in 'AdditionalFiles' is going to be used for first hands on the whole dataset, to get to know the dataset since the access is simple. By doing so we will present some general information about the dataset. To read both datafolders one should install additional packages that will be mentioned later on.
 
-For more information about the dataset especially about the frequent asked questions we recomend to go to (https://labrosa.ee.columbia.edu/millionsong/faq). 
+For more information about the dataset, especially about the frequently asked questions we recommend to go to (https://labrosa.ee.columbia.edu/millionsong/faq). 
 
-[^echo1]: TR+LETTERS + LETTERS&NUMBERS so the directorypath within the dataset is based on the first 3 letters after the 3rd one e.i 'MillionSong/data/A/D/H/TRADHRX12903CD3866.h5'
+[^echo1]: TR+LETTERS + LETTERS&NUMBERS so the directory path within the dataset is based on the first 3 letters after the 3rd one e.i 'MillionSong/data/A/D/H/TRADHRX12903CD3866.h5'
 [^nasa]: (National Aeronautics and Space Administration) https://www.nasa.gov/about/index.html page view [02.07.18]
 
 ## Preprocess the Additional files
 
-When accessing the data provided in 'AdditionalFiles' folder, one has to remove the Seperators \<SEP\> and replace those with a common seperator like ';'. This should be done, because R is used to a one byte seperator and therefor it is not possible to read a file with a seperator like \<SEP\>.
+When accessing the data provided in the 'AdditionalFiles' folder, one has to remove the seperators \<SEP\> and replace those with a common seperator like ';'. This should be done because R is used to an one byte seperator and therefore it is not possible to read a file with a seperator like \<SEP\>.
 
-The following codechunk was only used to access the txt files in RStudio.
+The following code snippet was only used to access the txt files in RStudio.
 
 ```{r importShow , warning=FALSE, echo=TRUE}
 # Load preprocessed data and name the columns
@@ -52,11 +53,11 @@ tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header =
 ```
 # General information visualized
 
-The following code loads the packages that are required to make a wordcloud. Furthermore while creating a wordcloud, one will notice that the first created wordcloud, has a very bad distribution. Mostly because of the most common words in english language. Those words do not have a meaning for this purposes. Therefor, according to the observation and an wikipedia article [^wiki2], one should wipe up the dataset from this words. Thus the recomendation is to use 'the','and' and 'a' to clean the dataset.
+The following code loads the packages that are required to make a word cloud. Furthermore while creating a word cloud, one will notice that the first created word cloud has a very bad distribution. This occurs as of the usage of the most common words in the english language. Most of those words do not have a real meaning, they are rather filling words (stop words). Therefore, according to the observation and a wikipedia article [^wiki2], one should wipe out the dataset of these words. Thus, the recommendation is to use 'the','and' and 'a' to clean the dataset.
 
-Describing the required packages, it is important to undesrstand what each package is used for in the following codechunk. Starting with 'tm' (Text Mining Package), that is common to use for wordcloud and handling different strings. Firstly one should take a closer look at Corpus that creates a collaction of corpora [^Corpus1]. Secondly one should create a Vector Source for the Corpus function and finally tm_map, which is an Interface that applies transformation functions to corpora objects. Also a very important function content_transformer is used to create a wrapper to get and set a content of a document. This steps where used to preprocess the documents. After doing so one should also consider to create a term document matrix, which contains every Term in documents and the documents it does appear in.
+Describing the required packages, it is important to understand what each package is used for in the following code snippet. Starting with 'tm' (Text Mining Package), that is commonly used for word clouds and handling different strings. Firstly one should take a closer look at Corpus that creates a collaction of corpora [^Corpus1]. Secondly one should create a Vector Source for the Corpus function and finally tm_map, which is an Interface that applies transformation functions to corpora objects. Also a very important function content_transformer is used to create a wrapper to get and set a content of a document. These steps were taken to preprocess the documents. After doing so one should also consider to create a term document matrix, which contains every term in documents and the documents it appears in.
 
-The package 'wordcloud' is a very usefull one, and does provide a graphical representation of the frequencies of used words in one or more documents [^wordcl]. This wordclouds can be seen in the following plots.
+The package 'wordcloud' is a very useful one, and does provide a graphical representation of the frequencies of used words in one or more documents [^wordcl]. These word clouds can be seen in the following plots.
 
 [^wiki2]: (https://en.wikipedia.org/wiki/Most_common_words_in_English) page view [26.06.18]
 [^Corpus1]: (https://cran.r-project.org/web/packages/tm/tm.pdf) page view [26.06.18]
@@ -95,26 +96,26 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1, scale = c(3,0.2),
 mtext('Artistnames', side = 2, line = 1, adj = 0.5) # title
 ```
 
-When looking at the wordcloud above one can see, that the most common artistnames are eather orchestr or John. Also there are some spanisch artist names containing words like los. This could be used for a better knowledge about the dataset. It is more clear that artists do not only come from england europe or the US but also from Spain or Latin America. One could of course get rid of the prepositions in all languages the dataset contains. Thus the preposition los would alse be wiped out.
-Some other names like Joe or King are also quite common used. To make some more assumptions and to get a better understanding of the wordcloud, the actual frequencies of the very frequent entries where provided in a table. 
+When looking at the word cloud above, one can see that the most common artist names are either 'orchestra' or 'John'. Also there are some spanish artist names containing words like 'los'. This can be used to gain a greater knowledge about the dataset. It becomes more clear that artists do not only come from England, Europe or the US but also from Spain or Latin America. One could get rid of the prepositions in all languages the dataset contains. Thus the preposition 'los' should alse be wiped out.
+Some other names like 'Joe' or 'King' are also quite commonly used. To make some more assumptions and to get a better understanding of the word cloud, the actual frequencies of the very frequent entries where provided in a table. 
 
 ```{r  headArtist, cache=TRUE, warning=FALSE}
 # show only head of frequency dataFrame
 head(d,8)
 ```
 
-Together with this table and the wordcloud one could gain a better understanding of the distribution of the artistnames in the given dataset. Now it is interesting to get some more facts about the most common name John. After a small research on the internet [research] one can see, that John was one of the most common names in the 1990's. To proove, that this name occure mostly in the 1990's in the dataset one should take a closer look on those years.    
+Together with this table and the word cloud one can gain a better understanding of the distribution of the artist names in the given dataset. Now it is interesting to get some more facts about the most common name 'John'. After a small research on the internet [research] one can see, that John was one of the most common names in the 1990's. To prove that this name occured mostly in the 1990's in the dataset one can take a closer look on the data of respective years.    
 
 [^research]: (https://en.wikipedia.org/wiki/List_of_most_popular_given_names#Male_names_2) page view [23.06.18]
 
 ```{r tracksPerYear}
 tracksPerYear$artistName[tracksPerYear$Year >= 1990 & tracksPerYear$Year <= 2000]
 ```
-After displaing the actual dataset and the entries of the artistnames between the years 1990 and 2000, the assumption made before should be declined. However one can see another common word in the displayed subset 'Los'. 
+After displaying the actual dataset and the entries of the artist names between the years 1990 and 2000, the assumption made before should be declined. However one can see another common word in the displayed subset 'Los'. 
 This set needs to be more described and explored, because the previous exploration does not provide a lot of information.
 
 ## Visualize songnames
-Almost the same analysis was done on common songnames. However the common words in this case where not quit the same as in the script before. The method to find common songnames was firstly plot the wordcloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it is obvious to delete those words. Thus the cleaning with found words like 'the','version','and','from', 'feat' and 'album' created the following wordcloud.
+Almost the same analysis was done on common song names. However the common words in this case were not quite the same as in the script before. The method we used to find common song names was to plot the word cloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it was obvious to delete those words. Thus the cleaning with words like 'the','version','and','from', 'feat' and 'album' created the following word cloud.
 
 ```{r wordcloudSongname, warning=FALSE , cache=TRUE}
 docs <- Corpus(VectorSource(as.character(tracks$songName)))
@@ -138,16 +139,16 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
 ```
 
-Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is obvious that this dataset consists of Songnames that are more likely to handle Love and the counterpart of a Human, you. A general assumption could be, that there are more songs handling Love, the counterpart of someone and the live, then about technic or traveling for example. However this assumption can not be completle prooven since this dataset does not represent all the songnames in the world.  
+Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is obvious that this dataset consists of song names that are more likely to address love and the counterpart of a human, you. A general assumption could be, that there are more songs addressing Love, the counterpart of someone and the life, following topics about the world or travelling for example. However this assumption can not be completely proven since this dataset does not represent all the song names in the world.  
 
-Also by looking at the folowing table, one can have a better and more detailed information about the distribution of the songnames.
+Also by looking at the following table, one can have a better and more detailed information about the distribution of the song names.
 ```{r headSong, warning=FALSE , cache=TRUE}
 head(d,7)
 ```
 
 ## Visualize artist locations
 
-Since it is clear that the dataset not only contains artists from england or europe or the US, it would be nice to have a proper listing of the world together with the location of the artists. This can be achived through the package 'maps' [^map1]. This package provides not only a method to draw a map by accsessing it through a word like world but also by giving this method a border by longitude and latitude to get a closer look on different parts of it. It is easy to use and draw complex maps as well as set some points on the map. The worldmap below shows all artists with their locations. Unfortinately the dataset does not provide a location for each containing artist, but nevertheless it creates a good overview. 
+Since it is clear that the dataset not only contains artists from England or Europe or the US, it would be nice to have a proper plot of the world together with the location of the artists. This can be achieved through the package 'maps' [^map1]. This package provides not only a method to draw a map by accessing it through a word like world but also by giving this method a border by longitude and latitude to get a closer look on different parts of it. It is easy to use and draw complex maps as well as set some points on the map. The world map below shows all artists with their respective locations. Unfortinately the dataset does not provide a location for each artist, but nevertheless it creates a good overview. 
 
 [^map1]: https://cran.r-project.org/web/packages/maps/maps.pdf page view [25.06.18]
 
@@ -169,7 +170,7 @@ map('world',c('.'), col = "grey80", fill = TRUE, border = "grey40")
 points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
 ```
 
-The assumptions about the artists made beforehand are completly right. The data not only consist of european and english speaking artist but also of people from arround the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the songnames it is hard to tell weather the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
+The assumptions about the artists made beforehand are completely right. The data not only consist of European and English speaking artist but also of people from around the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the song names it is hard to tell wether the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
 
 An even closer look on Europe is provided by the map below. Due to the blurred representation of Europe in the worldmap, this map was created. Especially because of the actual location of the author and the location of the university this representation was chosen. 
 
@@ -181,12 +182,12 @@ points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 ```
 
 # Analyse choosen Songs
-As mentioned before the selfseted goal of this task, was to find similarities of approved songs and to compare those to a recomendation made by spotify. To achive this, one should be able to read in the provided data in HDF5 Format. Therefor it is required to load the package 'rhdf5' [^package2] that helps accessing the datafiles and get the information out to analize it. 
-The chossen data is a preferation of a person of our group. The songs he choosed are ordered as followed:  <br />
+As mentioned before the goal we set ourselves for this task, was to find similarities of favorite songs and to compare those to a recommendation made by Spotify. To achive this, one should be able to read in the provided data in HDF5 Format. Therefore, it is required to load the package 'rhdf5' [^package2] that helps accessing the data files and get the information to analize it. 
+The chosen data is a preference of a person of our group. The songs he had chosen are ordered as followed:  <br />
 
 - Beynonce Single Ladies TrackID: TRAPZTV128F92CAA4E  <br />
 
-- Justin Timberlake What Goes Arround Comes Arround TrackID: TRANNZZ128F92C22F7  <br />
+- Justin Timberlake What Goes Around Comes Around TrackID: TRANNZZ128F92C22F7  <br />
 
 - Kanye West / Lupe Fiasco Touch The Sky TrackID: TRAQZQX128F931338F  <br />
 
@@ -194,7 +195,7 @@ The chossen data is a preferation of a person of our group. The songs he choosed
 
 - B.o.B Nothin on You feat Bruno Mars TrackID: TRAWBHE12903CBC4CB  <br />
 
-Taking the TrackID that functions also as the filename, one should first find out the right paths to the prefered files to access them. After creating the right path one should be able to access the data throug some methods. As described below there are two methods to read in data. The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output for h5ls() underneath.
+Taking the TrackID that functions also as the file name, one should first find out the right paths to the preferred files to access them. After creating the right path one should be able to access the data through some methods. As described below there are two methods to read in data. The first one is to access the groups with method h5ls() and the second one to access the data in those groups with method h5read(). One can see a slice of an output for h5ls() underneath.
 
 [^package2]: load < source("http://bioconductor.org/biocLite.R"); biocLite("rhdf5") >
 
@@ -229,8 +230,8 @@ artist <- lapply(SubPaths, function(x){
 head(artist$beyonce,23)
 ```
 
-This slice shows that there are different groups and even different subgroups one can access through h5read().
-An example of the final data of beyonces song of group analysis and metadata can be seen underneath.
+This snippet shows that there are different groups and even different subgroups one can access through h5read().
+An example of the final data of Beyonce's song of group analysis and metadata can be seen underneath.
 
 ```{r}
 library(fmsb) # for radar charts
@@ -248,29 +249,29 @@ Meta_song <- do.call(rbind, Meta_song)
 t(Analyze_song['beyonce',])
 t(Meta_song['beyonce',])
 ```
-Both tables will be used and combined on different variables. What also draws atention is the sparse vektors in the table above. Obviously one should get rid of those and just use the other variables for comparison.
+Both tables will be used and combined on different variables. What also draws attention is the sparse vectors in the table above. Obviously one should get rid of those and just use the other variables for comparison.
 
-First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Therefor one needs to make some further detailed analysis on the given data. Finally one should be able to predict any given song if it fits the calculated results and the predicted song would be recomended to that person. 
+First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Hence, one needs to make further detailed analysis on the given data. Finally, one should be able to predict any given song if it fits the calculated results and the predicted song would be recommended to that person. 
 
 ## Data discription 
-By looking at the data without any knowledge in beforehand, one should understand each an every variable. Since this has been done allready we will concentrate on the choosen variables and describe those. <br \>
+By looking at the data without any knowledge in beforehand, one should understand each an every variable. Since this has been done already, we will focus on the chosen variables and describe those. <br \>
 Variables: <br \>
 
 - Tempo: Indicates the speed of a beat and is also known as Beats per Minute (BPM). It is derived directly from avarage beat duration [^înfo2]. This is a basic unit of time in music. Now it is important to understand what exactly a beat is. To simplify the statement it is the rythm when a listener would tap his toe to a music sequence [^wiki3]. BPM Examples are 60 BPM would be a beat per second and 120 BPM would be 2 beats per second [^înfo1]. <br \>
 
-- Loudness: This indicates the overall loudness of a track in decibels (dB) and is avaraged across a track in this dataset. The Loudness is correlated with the physical strength   In the given dataset the Loudnes is avareged across a track [^înfo2]. <br \>
+- Loudness: This indicates the overall loudness of a track in decibels (dB) and is avaraged across a track in this dataset. The loudness is correlated with the physical strength   in the given dataset the loudness is averaged across a track [^înfo2]. <br \>
 
-- Mode: In the theory of Western music, a mode is a type of musical scale coupled with a set of characteristic melodic behaviors. [^wiki4]. To simplify this statement a mode could be seen a s the vocabulary of a melody. It specifies which notes can be used and indicates which have special importance [^înfo3]. Mostly Major notes sound happy and Minor notes does not [^spotify] <br \>
+- Mode: In the theory of Western music, a mode is a type of musical scale coupled with a set of characteristic melodic behaviors. [^wiki4]. To simplify this statement a mode could be seen as the vocabulary of a melody. It specifies which notes can be used and indicates which have special importance [^înfo3]. Mostly major notes sound happy and minor notes do not [^spotify] <br \>
 
-- Key: The Key of a song refers to a tonal center of it and will also determine what notes and chords a song should use [^spotify]. The key also identifies the tonic triad, the chord, major or minor, which represents the final point of rest of a piece [^înfo2]. An example of a key could be C C# D E F G etc.<br \>
+- Key: The key of a song refers to a tonal center of it and will also determine what notes and chords a song should use [^spotify]. The key also identifies the tonic triad, the chord, major or minor, which represents the final point of rest of a piece [^înfo2]. An example of a key could be C C# D E F G etc.<br \>
 
 - Time Signature: The time signature, also known as meter signature, is a notational convention to specify how many beats are in each bar [^înfo2]. So now it is important to understand what exactly a bar is. A bar (or measure) is a segment of time corresponding to a specific number of beats in which each beat is represented by a particular note value and the boundaries of the bar are indicated by vertical bar lines [^wiki5].
 
 ![https://en.wikipedia.org/wiki/Bar_(music)](./picturesDocu/970px-Barlines.svg.png)
  
- as can be seen in the picture above, a bar could be simplified through a vertical line in music notes. <br \>
+ As can be seen in the picture above, a bar could be simplified through a vertical line in music notes. <br \>
 
-- Segment Pitch: A Pitch is a position of a single sound in the complete range of sound. Sounds are higher or lower in pitch according to the frequency of vibration of the sound waves producing them [^info3]. For a better understanding one should take a look on the further picture. But also one should have a better understanding of a segment. A segment is a set of sound entities, typically under a second, each relatively uniform in timbre and harmony. Segments are characterized by their perceptual onsets and duration in seconds, loudness (dB), pitch and timbral content [^înfo2].
+- Segment Pitch: A pitch is a position of a single sound in the complete range of sound. Sounds are higher or lower in pitch according to the frequency of vibration of the sound waves producing them [^info3]. For a better understanding one should take a look on the further picture. But also one should have a better understanding of a segment. A segment is a set of sound entities, typically under a second, each relatively uniform in timbre and harmony. Segments are characterized by their perceptual onsets and duration in seconds, loudness (dB), pitch and timbral content [^înfo2].
 
 ![https://nuartapp.wordpress.com/2014/07/20/elements-of-music/](./picturesDocu/pitch.gif) 
 
@@ -289,11 +290,11 @@ Variables: <br \>
 
 ### Describing relations between the variables
 
-With all the provided information in the section above, one can derive a more specific representation of all the variables as well as a relationship between them. As can be seen below and also written in various articles, specialy on spotify, Emotion is a very important characteristic of music. Mostly people listen to music when they are sad or happy or try to project their feelings on to it. Therefor Emotion does have specific role when talking about music [^spotify]. In addition to that there is also the Genre of a song and even an artist, that is depending on other variables. It is also a very important characteristic that can predict a listeners favour. Mostly people tend to listen to one or two particular genres. For sure there are more overall variables like Emotion and Genre, but for now we limit ourself to only those two.  
+With all the provided information in the section above, one can derive a more specific representation of all the variables as well as a relationship between them. As can be seen below and also written in various articles, especially on Spotify, emotion is a very important characteristic of music. Most people listen to music when they are sad or happy or try to project their feelings on to it. Therefore, emotion does have specific role when talking about music [^spotify]. In addition to that there is also the genre of a song and even an artist, that depends on other variables. It is also a very important characteristic that can predict a listeners taste of music. Most people tend to listen to one or two particular genres. For sure there are more overall variables like emotion and genre, but for now we limit ourself to only those two.  
 
 ![Self created picture for the relationship between the variables](./picturesDocu/Variable.jpg)
 
-As provided by the image above, that was created by ourself the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for Emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the Key and the mode. As mentiond in the section Data discription especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that Key as well is a reliable source for measuring the Emotion, since it does correlate with the mode. Also the pitch is corresponding to one of the 12 keys and is therefor a reliable source for Emotions too.   
+As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions too.   
 
 
 
