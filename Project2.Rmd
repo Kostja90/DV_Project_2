@@ -199,7 +199,7 @@ Taking the TrackID that functions also as the file name, one should first find o
 
 [^package2]: load < source("http://bioconductor.org/biocLite.R"); biocLite("rhdf5") >
 
-```{r, warning=FALSE}
+```{r createHDf5Files, warning=FALSE}
 library(tcltk) # for interactive file choosing
 library(rhdf5) # required for H5 files
 
@@ -214,7 +214,7 @@ pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tas
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
 
 # find automaticaly all paths with names of trackIDs
-SubPaths <- lapply(TrackIDs,function(x){
+SubPaths <- lapply(TrackIDs,find.path <- function(x){
   list.files(pathToSet, x, recursive=TRUE, full.names=TRUE, include.dirs=TRUE)
 })
 
@@ -233,8 +233,7 @@ head(artist$beyonce,23)
 This snippet shows that there are different groups and even different subgroups one can access through h5read().
 An example of the final data of Beyonce's song of group analysis and metadata can be seen underneath.
 
-```{r}
-library(fmsb) # for radar charts
+```{r readHDF5files, warning = FALSE}
 Analyze_song <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/songs")
 })
@@ -271,13 +270,16 @@ Variables: <br \>
  
  As can be seen in the picture above, a bar could be simplified through a vertical line in music notes. <br \>
 
-- Segment Pitch: A pitch is a position of a single sound in the complete range of sound. Sounds are higher or lower in pitch according to the frequency of vibration of the sound waves producing them [^info3]. For a better understanding one should take a look on the further picture. But also one should have a better understanding of a segment. A segment is a set of sound entities, typically under a second, each relatively uniform in timbre and harmony. Segments are characterized by their perceptual onsets and duration in seconds, loudness (dB), pitch and timbral content [^înfo2].
+- Segment Pitch: A pitch is a position of a single sound in the complete range of sound. Sounds are higher or lower in pitch according to the frequency of vibration of the sound waves producing them [^info4]. For a better understanding one should take a look on the further picture. But also one should have a better understanding of a segment. A segment is a set of sound entities, typically under a second, each relatively uniform in timbre and harmony. Segments are characterized by their perceptual onsets and duration in seconds, loudness (dB), pitch and timbral content [^înfo2].
 
 ![https://nuartapp.wordpress.com/2014/07/20/elements-of-music/](./picturesDocu/pitch.gif) 
 
 <br \>
-- Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notion also referred to as sound color, texture, or tone quality [^înfo2]. <br \>
+- Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notion also referred to as sound color, texture, or tone quality [^înfo2]. The Echo Nest Analyzer’s timbre feature is a vector that includes 12 unbounded values roughly centered around 0. For completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc. [^înfo2]<br \>
 
+- artist familiarity
+
+- artist hotness
 
 [^wiki3]: https://en.wikipedia.org/wiki/Beat_(music) page view [04.07.18]
 [^înfo1]: https://www.rhythm-in-music.com/introduction-beat-and-tempo.html page view [04.07.18]
@@ -286,7 +288,7 @@ Variables: <br \>
 [^înfo3]: https://www.britannica.com/art/mode-music page view [04.07.18]
 [^spotify]: https://insights.spotify.com/it/2015/05/06/most-popular-keys-on-spotify/ page view [04.07.18]
 [^wiki5]: https://en.wikipedia.org/wiki/Bar_(music) page view [04.07.18]
-[^info3]: https://www.britannica.com/art/pitch-music page view [04.07.18]
+[^info4]: https://www.britannica.com/art/pitch-music page view [04.07.18]
 
 ### Describing relations between the variables
 
@@ -294,28 +296,41 @@ With all the provided information in the section above, one can derive a more sp
 
 ![Self created picture for the relationship between the variables](./picturesDocu/Variable.jpg)
 
-As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions too.   
+As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions too. 
+
+#### ab hier muss korriegiert werden und anschließend diese Section weg
+As can be seen in this image too, the tempo does provide as well the emotion as well as the genre. Typically a higher tempo describes a more happy song and a genre like pop or techno or something similar. Also the time signature, which does rely on beat as well as the tempo, could describe an emotion or a genre. Sigment Timbre however provides more a genre then an Emotion because it relies more on different types of musical instruments and some musical instruments do tend to be used in a particular genre like a guitar is common to use in Latin American songs. But together with the pitch, which does use the distribution of the keys, the timbre could be used to determine the emotion too. All of the preposition can be seen in the image above. The background information does come from a research our group atended and can be reproduced with the sources and footnotes in the very last section. 
+
+## Finding similarities
+
+Since there is enough information about the choosen variables one should attend to get a better overview about the songs. Hence our group chosed the followed variables to compare the songs.
+
+- Loudness 
+- Tempo
+- Mode
+- Key
+
+We created a radarplot using the package 'fmsb' [^fmsb]. This package is mostly used for Medical and Health Analysis in R, but can also be used for this purposes to radarplot the characteristics of our data. Together with the method 'radarchart' one can plot a radar that creates a very good overview of the characteristics. In the following Plot one can see some similarities of the choosen songs.
 
 
+[^fmsb]: https://cran.r-project.org/web/packages/fmsb/fmsb.pdf page view [05.07.18]
+```{r crateRadar, warning = FALSE }
+library(fmsb) # for radar charts
 
-```{r }
-# radarFrame <- function(df1, df2){
-#   matrix <- cbind('artist_familiarity' = df1$artist_familiarity, 'artist_hotttnesss' = df1$artist_hotttnesss, 'tempo'= df2$tempo, 'time_signature' = df2$time_signature, 'loudness' = df2$loudness, 'key' = df2$key) 
-#   rownames(matrix) <- rownames(df1)
-#   matrix <- data.frame(matrix)
-# }
-
+# function takes a dataframe and concatenates it
 radarFrame <- function(df2){
-  matrix <- cbind('tempo'= df2$tempo, 'loudness' = df2$loudness, 'mode' = df2$mode, 'key' = df2$key) 
+  matrix <- cbind('loudness' = df2$loudness,'tempo'= df2$tempo, 'mode' = df2$mode, 'key' = df2$key) 
   rownames(matrix) <- rownames(df2)
   matrix <- data.frame(matrix)
 }
 
-
+# creates a ArtistNameString out of dataframe information
 namesLegend <- paste(Meta_song$artist_name,Meta_song$title)
 
+# plots the radar, function wants to have a dataframe with the data to plot 
+# artistnames for the legend as well as the optional coordinates where to plot the legend
 radar <- function(df, namesLeg = namesLegend, x = -2.8 , y= -1.1){
-  transparency <- adjustcolor(1:dim(df)[1], alpha.f = 0.2) 
+  transparency <- adjustcolor(1:dim(df)[1], alpha.f = 0.2)
   # Custom the radarChart !
   radarchart( df  , axistype=1 , maxmin = FALSE,
     #custom polygon
@@ -323,129 +338,134 @@ radar <- function(df, namesLeg = namesLegend, x = -2.8 , y= -1.1){
     #custom the grid
     cglcol="grey", cglty=1, axislabcol=FALSE ,
     #custom labels
-    vlcex=0.8 
+    vlcex=0.8
     )
-  par(xpd=TRUE)
+  par(xpd=TRUE) # legend outside the plot 
 legend(x,y, legend = namesLeg, bty = "n", pch=20 , col=1:dim(df)[1] , cex=0.8, pt.cex=2)
 }
 
+#create Dataframe suited for radar
 data <- radarFrame(Analyze_song)
 
+# plot dataframe
 radar(data)
-# anschauen für radar 
-# artist familarity unter metadata
-# hotness sind aber estimateionen dh von EchoNest berechnet und schwierig in der absoluten umgehensweise
-# tempo in songs vergleichen mit anderer Seite weil nicht ganz richtig 
-# time signature in songs auch mit anderer Seite vergleichen  beides aus dem gleichen Datensatz daher auch der gleiche Fehler, wenn nun anderer datensatz dazukommt kann es dazu kommen, dass der Fehler nicht mehr reproduzierbar ist und der bias komplett verfälscht wird und wir somit keine Aussage mehr treffen können.
-# loudnes in songs
-# key in songs
-
-# Alles was oben ist von einer anderen Seite daten nehmen und radar plot erstellen zum vergleich
-
-# loudnes max als detailierter wert 
-
 ```
-```{r}
 
+Looking at the plotted characteristics one can not see a real dependency or even a good pattern. Mostly because the songs tend to be similar, since a listener prefers them, but not in the ploted variables. Nevertheles this variables can be used to make assumptions for other statements. Also this variables are ploted relativle to each other and not with static dimensions.
 
-#create radar chart from tunebat
+The plot above will be compared with same variables for similar songs but on an other platform. The comparison platform is https://tunebat.com/. Tunebat seems to rely on spotify web API, where it accesses Spotify songs and creates similar charactaristics. The image below concretisises the dependencies and the hirarchical time line between the platforms. Thus the platform THE ECHO NEST was the first and was bought by and merged to spotify. Spotify provides an API that Tunebat uses.
+
+![selfcreated graphical description of platform dependencies](./picturesDocu/dependencies.png) 
+
+It is not clear weather both platforms can be compared. The intension to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. So Tunebat provides those values. But first one should compare the given songs and find out if Tunebat could be used for such a comparison. 
+
+What also  should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset is not correct.
+
+```{r compareTunebat, warning = FALSE}
+# create radar chart from tunebat.com 
+# loudness <- loudness
+# tempo <- BPM
+# mode <- KEY
+# key <- KEY
 compareFrame <- data.frame(rbind(
-  beyonce = c('tempo' = 97, 'loudness' = -5, 'mode' = 0, 'key' = 11),
-  justin = c( 'tempo' = 76, 'loudness' = -5, 'mode' = 1, 'key' = 7),
-  kanye = c( 'tempo' = 106, 'loudness' = -5, 'mode' = 1,'key' = 9),
-  madonna = c('tempo' = 130, 'loudness' = -8, 'mode' = 0,'key' = 4),
-  bruno = c('tempo' = 104, 'loudness' = -6, 'mode' = 1, 'key' = 10)
+  beyonce = c( 'loudness ' = -5, 'tempo' = 97,'mode' = 0, 'key' = 11),
+  justin = c( 'loudness ' = -5, 'tempo' = 76, 'mode' = 1, 'key' = 7),
+  kanye = c('loudness ' = -5, 'tempo' = 106, 'mode' = 1,'key' = 9),
+  madonna = c( 'loudness ' = -8, 'tempo' = 130, 'mode' = 0,'key' = 4),
+  bruno = c( 'loudness ' = -6, 'tempo' = 104, 'mode' = 1, 'key' = 10)
 ))
 
-Analyze_song['bruno',]
-
-Meta_song['bruno',]
-# because all timesignatuires are 4, there is no proper graph 
-# radarchart draws relatively
-radar(compareFrame)
-
-
-# not realy comparable as seen
+{
+# plot the two radarcharts together in one plot
 par(mfrow = c(1,2))
 radar(data,x=-2.2, y = -1.2)
 radar(compareFrame,x=-2.2,  y = -1.2)
 par(mfrow = c(1,1))
-
-
-
+}
 ```
+When comparing the two platforms it 
 
 
 
-```{r}
-# library(fmsb)
-# Tune_Beyance
-# Tune_Justin <- c(,,76,,-5,8)
-# Tune_Kanye
-# Tune_Bruno
-# Tune_Madonna
 
-loudness_start <- apply(SubPaths,2,function(x){
-  h5read(x,"/analysis/segments_loudness_start")
-})
+# compare Songs with preferation
 
-loudness_max <- apply(SubPaths,2,function(x){
-  h5read(x,"/analysis/segments_loudness_max")
-})
+look at 
 
-par(mfrow= c(1,2))
-boxplot(loudness_start, main = 'loudness_start' )
-boxplot(loudness_max, main = 'loudness_max' )
-mtext('Boxplots of loudness', outer = TRUE, side = 3, line = -1)
-par(mfrow= c(1,1))
+- artist familiarity
+- artist hottness
+- key 
+- tempo
 
 
-Draw_matrix_plots <- function(plt){
-  layout(matrix(c(1,1,2,2,3,3,0,4,4,5,5,0), 2, byrow = TRUE), heights=c(2,2))
-  c <- 0
-  invisible(lapply(plt,function(x){
-  c <<- c+1
-  plot(x,type = 'l', axes = FALSE, xlab = '', ylab = '', main = names(plt)[c])
-  axis(2)
-  axis(1)
-  }))
-  mtext(paste('Plot', deparse(substitute(plt)),'for different interprets' ), side = 3, line = -19, outer = TRUE)
-  par(mfrow=c(1,1))
+```{r actual}
+
+# MSD Songs for detailed comparison 
+crateBarplotOfFrame <- function(x,y, NameP, rownames = FALSE){
+  barplot(x[,y], main = y, col = 1:dim(x)[1], horiz = TRUE, names.arg= if(rownames){row.names(NameP)}else{names(NameP)}, cex.names=0.8, las = 1)
 }
 
-Draw_matrix_plots(loudness_start)
 
-Draw_matrix_plots(loudness_max)
+par(mfrow =c(2,2))
+crateBarplotOfFrame(Meta_song,'artist_familiarity', SubPaths)
+crateBarplotOfFrame(Meta_song,'artist_hotttnesss', SubPaths)
+crateBarplotOfFrame(Analyze_song,'tempo', SubPaths)
+crateBarplotOfFrame(Analyze_song,'key', SubPaths)
+par(mfrow =c(1,1))
 
-matplot_Draw <- function(plt){
-  dFrame <- do.call(cbind, plt)
-  matplot(dFrame,type = "l", col = 1:dim(dFrame)[2], ylab = "loudness", xlab = 'segmentstep', main = paste('matplot', deparse(substitute(plt))))
-  legend("topleft", legend = names(plt), col = 1:dim(dFrame)[2], pch = 16)
+# create array with found Ids in beforehand containing prefered songs
+TrackIDs <- array(c('TRAZWGK128F93141E3','TRBDOVF128E0795641','TRAAKDG128F42A0ECB'))
+
+# find automaticaly all paths with names of trackIDs
+SubPaths <- lapply(TrackIDs,function(x){
+  list.files(pathToSet, x, recursive=TRUE, full.names=TRUE, include.dirs=TRUE)
+})
+
+# beautify the dataset 
+SubPaths <- data.frame(SubPaths = t(unlist(SubPaths)))
+names(SubPaths) <- c('Lady Gaga', 'Sean Paul', 'Shakira')
+
+# data from analysis song
+R_Analyze_song <- apply(SubPaths,2,function(x){
+  h5read(x,"/analysis/songs")
+})
+R_Analyze_song <- do.call(rbind, R_Analyze_song)
+
+# data from meta song
+R_Meta_song <- apply(SubPaths,2,function(x){
+  h5read(x,"/metadata/songs")
+})
+R_Meta_song <- do.call(rbind, R_Meta_song)
+
+# cretae better comparrison for songs
+P_songs <- cbind('artist_familiarity' =  mean(Meta_song$artist_familiarity), 'artist_hotttnesss' = mean(Meta_song$artist_hotttnesss), 'tempo' = mean(Analyze_song$tempo),  'key' = mean(Analyze_song$key))
+R_songs <- cbind('artist_familiarity' = R_Meta_song$artist_familiarity, 'artist_hotttnesss' = R_Meta_song$artist_hotttnesss, 'tempo' = R_Analyze_song$tempo, 'key' = R_Analyze_song$key)
+
+all_songs <- rbind(P_songs,R_songs)
+MSD_R <- data.frame(all_songs, row.names = c("p_avg",row.names(R_Meta_song)[1:3]))
+
+par(mfrow = c(2,2))
+crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
+crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
+crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
+crateBarplotOfFrame(R_Analyze_song,'key', SubPaths)
+par(mfrow = c(1,1))
+
+crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
+  boxplot(x[,y], las = 2 , main= y, ylim=c(limStart,limEnd))
+abline(h=xDerive[,y], col =2:(dim(xDerive)[1]+1))
+axis(1, labels=c("playlist"), at=1, las=1)
 }
 
-matplot_Draw(loudness_start)
-
-matplot_Draw(loudness_max)
-
-```
-
-
-```{r}
-
-# nicht sicher mit dem hier 
-Analyze_pitch <- apply(SubPaths,2,function(x){
-  h5read(x,"/analysis/segments_pitches")
-})
-boxplot(Analyze_pitch)
-
-
-Analyze_timbre <- apply(SubPaths,2,function(x){
-  h5read(x,"/analysis/segments_timbre")
-})
-
-boxplot(Analyze_timbre)
+layout(matrix(c(1,2,1,3),2,2,byrow = TRUE))
+crateBoxplotOfFrame(Meta_song,'artist_familiarity',R_Meta_song,0.7,1)
+crateBoxplotOfFrame(Meta_song,'artist_hotttnesss',R_Meta_song,0.5,0.9)
+crateBoxplotOfFrame(Analyze_song,'tempo',R_Analyze_song,80,130)
+par(mfrow = c(1,1))
 
 ```
+
+
 
 # Conclusion
 
@@ -473,7 +493,5 @@ research:
 on Key:
 
 - https://ledgernote.com/blog/lessons/musical-key-characteristics-emotions/
-
-
 
 
