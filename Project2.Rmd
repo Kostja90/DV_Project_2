@@ -11,11 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-<<<<<<< HEAD
-setwd('/Users/a.gogohia')
-=======
 setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/')
->>>>>>> f5cdde9b62ed82caf2e02a872b67dcb932990d1a
 ```
 
 # Introduction
@@ -55,6 +51,7 @@ tracks <- read.csv2('data/subset_unique_tracks.txt',sep = ';', header = FALSE, c
 tracksPerYear <- read.csv2('data/subset_tracks_per_year.txt',sep = ';', header = FALSE,  col.names = c('Year', 'trackID', 'artistName','songName'))
 
 ```
+
 # General information visualized
 
 The following code loads the packages that are required to make a word cloud. Furthermore while creating a word cloud, one will notice that the first created word cloud has a very bad distribution. This occurs as of the usage of the most common words in the english language. Most of those words do not have a real meaning, they are rather filling words (stop words). Therefore, according to the observation and a wikipedia article [^wiki2], one should wipe out the dataset of these words. Thus, the recommendation is to use 'the','and' and 'a' to clean the dataset.
@@ -119,6 +116,7 @@ After displaying the actual dataset and the entries of the artist names between 
 This set needs to be more described and explored, because the previous exploration does not provide a lot of information.
 
 ## Visualize songnames
+
 Almost the same analysis was done on common song names. However the common words in this case were not quite the same as in the script before. The method we used to find common song names was to plot the word cloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it was obvious to delete those words. Thus the cleaning with words like 'the','version','and','from', 'feat' and 'album' created the following word cloud.
 
 ```{r wordcloudSongname, warning=FALSE , cache=TRUE}
@@ -146,6 +144,7 @@ mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
 Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is obvious that this dataset consists of song names that are more likely to address love and the counterpart of a human, you. A general assumption could be, that there are more songs addressing Love, the counterpart of someone and the life, following topics about the world or travelling for example. However this assumption can not be completely proven since this dataset does not represent all the song names in the world.  
 
 Also by looking at the following table, one can have a better and more detailed information about the distribution of the song names.
+
 ```{r headSong, warning=FALSE , cache=TRUE}
 head(d,7)
 ```
@@ -156,11 +155,8 @@ Since it is clear that the dataset not only contains artists from England or Eur
 
 [^map1]: https://cran.r-project.org/web/packages/maps/maps.pdf page view [25.06.18]
 
-<<<<<<< HEAD
-#aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
-unique(tracksPerYear$artistName)
-=======
 ```{r worldmapArtist , warning=FALSE}
+# aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
 library(maps)
 
 # parse the lat and lon values of given set 
@@ -176,11 +172,7 @@ coordinates <- as.data.frame(cbind(lon, lat))
 # world map 
 map('world',c('.'), col = "grey80", fill = TRUE, border = "grey40") 
 points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
-<<<<<<< HEAD
->>>>>>> f5cdde9b62ed82caf2e02a872b67dcb932990d1a
-=======
 ```
->>>>>>> 0311762973a0cba5bae40b6fff14e4023ab7404c
 
 The assumptions about the artists made beforehand are completely right. The data not only consist of European and English speaking artist but also of people from around the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the song names it is hard to tell wether the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
 
@@ -269,6 +261,7 @@ track_pitch <- apply(SubPaths,2,function(x){
 t(Analyze_song['beyonce',])
 t(Meta_song['beyonce',])
 ```
+
 Both tables will be used and combined on different variables. What also draws attention is the sparse vectors in the table above. Obviously one should get rid of those and just use the other variables for comparison.
 
 First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Hence, one needs to make further detailed analysis on the given data. Finally, one should be able to predict any given song if it fits the calculated results and the predicted song would be recommended to that person. 
@@ -296,6 +289,7 @@ Variables: <br \>
 ![https://nuartapp.wordpress.com/2014/07/20/elements-of-music/](./picturesDocu/pitch.gif) 
 
 <br \>
+
 - Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notation also referred to as sound color, texture, or tone quality [^înfo2]. The Echo Nest Analyzer’s timbre feature is a vector that includes 12 unbounded values roughly centered around 0. This is represented as 12-dimensional vectors that are the principal components of Mel-frequency cepstral co- efficients (MFCCs). They represent the power spectrum of sound, and are derived from Fourier analysis and further processing [^doku4]. For completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc [^înfo2]. <br \>
 
 - artist familiarity: Familiarity is an indication of how well known the artist is in 2010. [^famHot1]
