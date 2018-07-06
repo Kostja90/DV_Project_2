@@ -12,7 +12,11 @@ html_document:
     code_folding: hide
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+<<<<<<< HEAD
+setwd('/Users/a.gogohia')
+=======
 setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/')
+>>>>>>> f5cdde9b62ed82caf2e02a872b67dcb932990d1a
 ```
 
 # Introduction
@@ -20,7 +24,7 @@ As required, this task was an open one, so the students had to choose a specific
 As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). [^Labinfo1]
 
 Our goal is going to be an analysis of specific files of our favorite songs. Since all of the music files are labeled with artist- and songnames, as well as the year of production, we were able to find almost every song either on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). 
-After selecting our prefered songs, we are going to analyze these songs to get a good understanding of the data that describes our preference. Lastly we are going to use spotify for prediction. As a result we hope for a more thorough analysis and understanding of the given data. If this step would be left out, we would be comparing very different data that is not suitable for research purposes.
+After selecting our prefered songs, we are going to analyze these songs to get a good understanding of the data that describes our preference. Lastly we are going to use Spotify for recommendation. As a result we hope for a more thorough analysis and understanding of the given data. This step is needed to find similar songs fast and take them as a basis to compare the data with our chosen songs.
 
 Alongside with the above analysis our goal is to get some more general information about the artists and their songs. Therefore we are going to visualize general information as well. 
 
@@ -153,6 +157,10 @@ Since it is clear that the dataset not only contains artists from England or Eur
 
 [^map1]: https://cran.r-project.org/web/packages/maps/maps.pdf page view [25.06.18]
 
+<<<<<<< HEAD
+#aggregate(tracksPerYear,by = tracksPerYear$artistName, FUN = sum)
+unique(tracksPerYear$artistName)
+=======
 ```{r worldmapArtist , warning=FALSE}
 library(maps)
 
@@ -169,7 +177,11 @@ coordinates <- as.data.frame(cbind(lon, lat))
 # world map 
 map('world',c('.'), col = "grey80", fill = TRUE, border = "grey40") 
 points(coordinates$lon, coordinates$lat, col = "red", cex = .1)
+<<<<<<< HEAD
+>>>>>>> f5cdde9b62ed82caf2e02a872b67dcb932990d1a
+=======
 ```
+>>>>>>> 0311762973a0cba5bae40b6fff14e4023ab7404c
 
 The assumptions about the artists made beforehand are completely right. The data not only consist of European and English speaking artist but also of people from around the world. Mostly the artists come from the US and Europe, some even from Russia or Australia or as assumed before from Latin America. By looking at the song names it is hard to tell wether the artist is from Australia or the US. With this representation one can have a better understanding of the dataset and finally clarify the unclarified.  
 
@@ -307,23 +319,23 @@ With all the provided information in the section above, one can derive a more sp
 
 ![Self created picture for the relationship between the variables](./picturesDocu/Variable.jpg)
 
-As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions too. 
+As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions, too. 
 
 #### ab hier muss korriegiert werden und anschließend diese Section weg
-As can be seen in this image too, the tempo does provide as well the emotion as well as the genre. Typically a higher tempo describes a more happy song and a genre like pop or techno or something similar. Also the time signature, which does rely on beat as well as the tempo, could describe an emotion or a genre. Sigment Timbre however provides more a genre then an Emotion because it relies more on different types of musical instruments and some musical instruments do tend to be used in a particular genre like a guitar is common to use in Latin American songs. But together with the pitch, which does use the distribution of the keys, the timbre could be used to determine the emotion too. All of the preposition can be seen in the image above. The background information does come from a research our group atended and can be reproduced with the sources and footnotes in the very last section. 
+As can be seen in this image too, the tempo does indicate the emotion as well as the genre. Typically a higher tempo describes a more happy song and a genre like pop or techno or something similar. Also the time signature, which does rely on beat as well as the tempo could describe an emotion or a genre. Sigment Timbre however indicates more a genre than an emotion because it relies more on different types of musical instruments and some musical instruments do tend to be used in a particular genre like a guitar is common to use in Latin American songs. But together with the pitch, which uses the distribution of the keys, the timbre could be used to determine the emotion too. All of the previous can be seen in the image above. The background information does come from a research our group attended and can be reproduced with the sources and footnotes in the very last section. 
 
 ## Finding similarities
 
 ### General comparison
 
-Since there is enough information about the choosen variables one should attend to get a better overview about the songs. Hence our group chosed the followed variables to compare the songs.
+Since there is enough information about the chosen variables one should attend to get a better overview about the songs. Hence our group have chosen the following variables to compare the songs.
 
 - Loudness 
 - Tempo
 - Mode
 - Key
 
-We created a radarplot using the package 'fmsb' [^fmsb]. This package is mostly used for Medical and Health Analysis in R, but can also be used for this purposes to radarplot the characteristics of our data. Together with the method 'radarchart' one can plot a radar that creates a very good overview of the characteristics. In the following Plot one can see some similarities of the choosen songs.
+We created a radarplot using the package 'fmsb' [^fmsb]. This package is mostly used for medical and health analysis in R, but can also be used for this purposes to radarplot the characteristics of our data. Together with the method 'radarchart' one can plot a radar that creates a very good overview of the characteristics. In the following plot one can see some similarities of the choosen songs.
 
 
 [^fmsb]: https://cran.r-project.org/web/packages/fmsb/fmsb.pdf page view [05.07.18]
@@ -370,9 +382,9 @@ The plot above will be compared with same variables for similar songs but on an 
 
 ![selfcreated graphical description of platform dependencies](./picturesDocu/dependencies.png) 
 
-It is not clear weather both platforms can be compared. The intension to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. So Tunebat provides those values. But first one should compare the given songs and find out if Tunebat could be used for such a comparison. 
+It is not clear weather both platforms can be compared. The intention to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. So Tunebat provides those values. But first one should compare the given songs and find out if Tunebat could be used for such a comparison. 
 
-What also  should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset for Justin Timberlake is not correct.
+What also should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset for Justin Timberlake is not correct.
 
 ```{r compareTunebat, warning = FALSE}
 # create radar chart from tunebat.com 
@@ -435,8 +447,8 @@ The tempo does also vary quite a lot and therefore it is hard to tell which temp
 The key in this case tends to be more in the higher sphere, what actually regards to the time the music was produced in. Since the 21th century music tend to be produced more Louder and mostly in G, which is a higher key.
 
 
-### Spotify recomendation analysis
-Since we did not wanted to pick some random musicfiles, we created a playlist on spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recomendation based on the actual playlist. We used this recomendation to get more interesting results for research purposes. However the used dataset did not provide all recomended music from spotify and we had to refresh the recomendations a couple of times to get the songs, which MSD contains. 
+### Spotify recommendation analysis
+Since we did not wanted to pick some random musicfiles, we created a playlist on Spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recomendation based on the actual playlist. We used this recommendation to get more interesting results for research purposes. However the used dataset did not provide all recomended music from spotify and we had to refresh the recomendations a couple of times to get the songs, which MSD contains. 
 
 Finaly we found three different songs, that MSD provides too.
 
@@ -588,14 +600,15 @@ points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
 
-The pitch PCA plot does provide even more groups as the tinbre PCA. Also we can see, that both plots do have different results. When thinking about the ploted result one can describe why the pitch does have a different result then the timbre. The pitch does not give a good overview about the dataset it only depends on the key values, whereas timbre depends on the whole dataset.
+The pitch PCA plot does provide even more groups as the timbre PCA. Also we can see, that both plots do have different results. When thinking about the ploted result one can describe why the pitch does have a different result then the timbre. The pitch does not give a good overview about the dataset it only depends on the key values, whereas timbre depends on the whole dataset.
 
 To sum up both results, pitch does not fit for this kind of task. Timbre PCA partly confirms the assumptions made in the sections before.
 
 # Conclusion
-To Conclude the whole results, the listener should listen to the recomended songs and make a qualitative analysis. 
+To conclude the whole results, one should listen to the recommended songs and make a qualitative analysis and state if this individual indeed likes the recommendended songs. 
 
-After doing so, the listener came to the exactly same result as recomended. Therefore the assumptions made by the bar- and boxplots where quite good and could be used for recomending more music to the listener. Of course one could also use the timbre to recomend the music. This assumption would be even better, since it recomended as well 'Shakira' as well as 'Sean Paul', whereas the other assumption did a grading. 
+In this final analysis it turned out that the listener truly likes the music recommended by Spotify. Therefore, the assumptions made by the bar- and boxplots where quite good and could be used for recommending further music to the listener. 
+Besides the bar- and the boxplots, we even found a more profound way of finding smililar songs. We plotted the timbre PCA and found recommended music in the same region plotted as our chosen music.  This assumption would be even better, since it recomended as well 'Shakira' as well as 'Sean Paul', whereas the other assumption did a grading. 
 
 We reached our goal, to find some similarities in prefered songs and based on those recomend some other songs. Even though we used Spotify for getting recomended songs, to be not picking randomly songs out of the dataset that with a very high probability wont fit. Because mostly the songs are from the 1940's, 1950's and 1960's.
 
