@@ -18,8 +18,8 @@ setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_
 As required, this task was an open one, so the students had to choose a specific topic on their own. Our group did choose a dataset we found on https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset#subset. This subset contains 10k music files and is around 2GB. The actual dataset is about 300GB and has around 1 million entries. In this case these are songs. Besides the analysis, the dataset includes some metadata, like the author, the year of production and so forth. As its center piece it features music data for each song in HDF5 format. The actual provider of this data set is THE ECHO NEST (http://the.echonest.com), which used to be a music intelligence and data platform for developers until Spotify (https://www.spotify.com/de/), a famous music streaming provider, acquired The Echo Nest.[^wiki1]
 As provided by the information about the dataset, it is a result of an collaboration between THE ECHO NEST and LabROSA (https://labrosa.ee.columbia.edu). [^Labinfo1]
 
-Our goal is going to be an analysis of specific files of our favorite songs. Since all of the music files are labeled with artist- and songnames, as well as the year of production, we were able to find almost every song either on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). 
-After selecting our prefered songs, we are going to analyze these songs to get a good understanding of the data that describes our preference. Lastly we are going to use Spotify for recommendation. As a result we hope for a more thorough analysis and understanding of the given data. This step is needed to find similar songs fast and take them as a basis to compare the data with our chosen songs.
+Our goal is going to be an analysis of specific files of our favorite songs. Since all of the music files are labeled with artist- and song names, as well as the year of production, we were able to find almost every song either on YouTube (https://www.youtube.com) or on Spotify (https://www.spotify.com/de/). 
+After selecting our preferred songs, we are going to analyze these songs to get a good understanding of the data that describes our preferrence. Lastly we are going to use Spotify for recommendation. As a result we hope for a more thorough analysis and understanding of the given data. This step is needed to find similar songs fast and take them as a basis to compare the data with our chosen songs.
 
 Alongside with the above analysis our goal is to get some more general information about the artists and their songs. Therefore we are going to visualize general information as well. 
 
@@ -115,8 +115,12 @@ tracksPerYear$artistName[tracksPerYear$Year >= 1990 & tracksPerYear$Year <= 2000
 After displaying the actual dataset and the entries of the artist names between the years 1990 and 2000, the assumption made before should be declined. However one can see another common word in the displayed subset 'Los'. 
 This set needs to be more described and explored, because the previous exploration does not provide a lot of information.
 
+<<<<<<< HEAD
 ## Visualize songnames
 
+=======
+## Visualize song names
+>>>>>>> 02b99e7f0c0e168bbf852fdf9f74639237465673
 Almost the same analysis was done on common song names. However the common words in this case were not quite the same as in the script before. The method we used to find common song names was to plot the word cloud as an  uncleaned version, containing all possible words. After deciding which words do not have a proper meaning to the final statement it was obvious to delete those words. Thus the cleaning with words like 'the','version','and','from', 'feat' and 'album' created the following word cloud.
 
 ```{r wordcloudSongname, warning=FALSE , cache=TRUE}
@@ -138,7 +142,7 @@ d <- data.frame(word = names(v),freq=v)
 
 wordcloud(words = d$word, freq = d$freq, min.freq = 1, 
           max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
-mtext('Songnames', side = 3, line = 0, adj = 0.5) # title
+mtext('Song names', side = 3, line = 0, adj = 0.5) # title
 ```
 
 Looking at the result one can see the frequently words 'you' and 'love'. Interpreting this result, it is obvious that this dataset consists of song names that are more likely to address love and the counterpart of a human, you. A general assumption could be, that there are more songs addressing Love, the counterpart of someone and the life, following topics about the world or travelling for example. However this assumption can not be completely proven since this dataset does not represent all the song names in the world.  
@@ -185,9 +189,9 @@ map(col = "grey80", border = "grey40", fill = TRUE,
 points(coordinates$lon, coordinates$lat, col = "red", cex = .3)
 ```
 
-# Analyse choosen Songs
+# Analyse chosen Songs
 As mentioned before the goal we set ourselves for this task, was to find similarities of favorite songs and to compare those to a recommendation made by Spotify. To achive this, one should be able to read in the provided data in HDF5 Format. Therefore, it is required to load the package 'rhdf5' [^package2] that helps accessing the data files and get the information to analize it. 
-The chosen data is a preference of a person of our group. The songs he had chosen are ordered as followed:  <br />
+The chosen data is a preferrence of a person of our group. The songs he had chosen are ordered as followed:  <br />
 
 - Beynonce Single Ladies TrackID: TRAPZTV128F92CAA4E  <br />
 
@@ -214,7 +218,7 @@ library(rhdf5) # required for H5 files
 # set a hardcoded Path to the MillionSongSubset
 pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
 
-# create array with found Ids in beforehand containing prefered songs
+# create array with found Ids in beforehand containing preferred songs
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
 
 # find automaticaly all paths with names of trackIDs
@@ -267,7 +271,7 @@ Both tables will be used and combined on different variables. What also draws at
 First, one has to decide which variables one should take and what the meaning of those is. Second, it is important to decide which of those variables is comparable and where the similarities between the songs are. Hence, one needs to make further detailed analysis on the given data. Finally, one should be able to predict any given song if it fits the calculated results and the predicted song would be recommended to that person. 
 
 ## Data discription 
-By looking at the data without any knowledge in beforehand, one should understand each an every variable. Since this has been done already, we will focus on the chosen variables and describe those. <br \>
+By looking at the data without any knowledge in beforehand, one should understand each every variable. Since this has been done already, we will focus on the chosen variables and describe those. <br \>
 Variables: <br \>
 
 - Tempo: Indicates the speed of a beat and is also known as Beats per Minute (BPM). It is derived directly from avarage beat duration [^înfo2]. This is a basic unit of time in music. Now it is important to understand what exactly a beat is. To simplify the statement it is the rythm when a listener would tap his toe to a music sequence [^wiki3]. BPM Examples are 60 BPM would be a beat per second and 120 BPM would be 2 beats per second [^înfo1]. <br \>
@@ -315,20 +319,20 @@ With all the provided information in the section above, one can derive a more sp
 As provided by the image above, that was created by ourselves, the variables tend to describe the overall variables. Our research on the variables, led to this picture. Here one can see properly that the relationship for emotion does of course consist of all the variables, since the whole package of information does lead towards a proper and confident answer, but also it is highly dependent on the key and the mode. As mentioned in the section 'Data discription' especially the mode, mostly tends to describe either if the song is a happy one or not. Here one can see that key is a reliable source for measuring the emotion as well, since it correlates with the mode. Also the pitch is corresponding to one of the 12 keys and therefore, is a reliable source for emotions, too. 
 
 #### ab hier muss korriegiert werden und anschließend diese Section weg
-As can be seen in this image too, the tempo does indicate the emotion as well as the genre. Typically a higher tempo describes a more happy song and a genre like pop or techno or something similar. Also the time signature, which does rely on beat as well as the tempo could describe an emotion or a genre. Sigment Timbre however indicates more a genre than an emotion because it relies more on different types of musical instruments and some musical instruments do tend to be used in a particular genre like a guitar is common to use in Latin American songs. But together with the pitch, which uses the distribution of the keys, the timbre could be used to determine the emotion too. All of the previous can be seen in the image above. The background information does come from a research our group attended and can be reproduced with the sources and footnotes in the very last section. 
+As can be seen in this image too, the tempo does indicate the emotion as well as the genre. Typically a higher tempo describes a more happy song and a genre like pop or techno or something similar. Also the time signature, which does rely on beat as well as the tempo could describe an emotion or a genre. Sigment Timbre however indicates more a genre than an emotion because it relies more on different types of musical instruments and some musical instruments do tend to be used in a particular genre like a guitar is common to use in Latin American songs. But together with the pitch, which uses the distribution of the keys, the timbre could be used to determine the emotion too. All of the previous can be seen in the image above. The background information does come from a research we conducted and can be reproduced with the sources and footnotes in the very last section. 
 
 ## Finding similarities
 
 ### General comparison
 
-Since there is enough information about the chosen variables one should attend to get a better overview about the songs. Hence our group have chosen the following variables to compare the songs.
+Since there is enough information about the chosen variables we now should get a better overview about the songs. Hence our group have chosen the following variables to compare the songs.
 
 - Loudness 
 - Tempo
 - Mode
 - Key
 
-We created a radarplot using the package 'fmsb' [^fmsb]. This package is mostly used for medical and health analysis in R, but can also be used for this purposes to radarplot the characteristics of our data. Together with the method 'radarchart' one can plot a radar that creates a very good overview of the characteristics. In the following plot one can see some similarities of the choosen songs.
+We created a radarplot using the package 'fmsb' [^fmsb]. This package is mostly used for medical and health analysis in R, but can also be used for this purposes to radarplot the characteristics of our data. Together with the method 'radarchart' one can plot a radar that creates a very good overview of the characteristics. In the following plot one can see some similarities of the chosen songs.
 
 
 [^fmsb]: https://cran.r-project.org/web/packages/fmsb/fmsb.pdf page view [05.07.18]
@@ -369,15 +373,15 @@ data <- radarFrame(Analyze_song)
 radar(data)
 ```
 
-Looking at the plotted characteristics one can not see a real dependency or even a realy good pattern. Mostly because the songs tend to be similar, since a listener prefers them, but not in all ploted variables. One could assume that key and tenpo tend to build clusters. Hence this variables will be taken for a closer look. Nevertheles all variables can be used to make assumptions for other statements. Also this variables are ploted relativle to each other and not with static dimensions. Therefor there will be a static plot provided.
+Looking at the plotted characteristics one can not see a real dependency or even a really obvious pattern. Mostly because the songs tend to be similar, since a listener prefers them. But this assumed similarity is not easy to see in the plots. One could assume that key and tempo tend to appear in clusters. Hence this variables will be taken for a closer look. Nevertheless all variables can be used to make assumptions for other statements. Also this variables are plotted relative to each other and not with static dimensions. Therefore, there will be a static plot provided.
 
-The plot above will be compared with same variables for similar songs but on an other platform. The comparison platform is https://tunebat.com/. Tunebat seems to rely on spotify web API, where it accesses Spotify songs and creates similar charactaristics. The image below concretisises the dependencies and the hirarchical time line between the platforms. Thus the platform THE ECHO NEST was the first and was bought by and merged to spotify. Spotify provides an API that Tunebat uses.
+The plot above will be compared with same variables for similar songs but on an other platform. The comparison platform is https://tunebat.com/. Tunebat seems to rely on spotify web API, where it accesses Spotify songs and creates similar charactaristics. The image below concretisises the dependencies and the hirarchical time line between the platforms. Thus the platform THE ECHO NEST was the first and was bought by and merged to Spotify. Spotify provides an API that Tunebat uses.
 
 ![selfcreated graphical description of platform dependencies](./picturesDocu/dependencies.png) 
 
-It is not clear weather both platforms can be compared. The intention to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. So Tunebat provides those values. But first one should compare the given songs and find out if Tunebat could be used for such a comparison. 
+It is not clear wether both platforms can be compared. The intention to compare the platforms did come up, because it would be better to have some more information about the songs regarding the emotion or the genre. Tunebat provides those desired values. But first, one should compare the given songs and find out if Tunebat could be used for such a comparison. 
 
-What also should be mentioned before is that listening to those songs did get quite the same answers regarding the variables, besides the Justin Timberlake song. Our assumption was that the data in the MDS dataset for Justin Timberlake is not correct.
+What also should be mentioned before, is that listening to those songs did get quite the same answers regarding the variables, except the Justin Timberlake song. Our assumption is that the data in the MDS dataset for Justin Timberlake is not correct.
 
 ```{r compareTunebat, warning = FALSE}
 # create radar chart from tunebat.com 
@@ -405,14 +409,14 @@ par(mfrow = c(1,1))
 
 When comparing the two platforms it seems that the songs do not have any similarities. This could be described through the song data. 
 
-Artists do create songs, but sometimes there are many versions of those songs and it is hard to find the right one to compare them. Even if the songname is the same it could be modifyed. So in this case that explanation could fit, or simply that either the first or the second dataset is falsified. Since both platforms are not comparable the data from the second platform, Tunebat could be rejected. We will restrict ourseves only to the data provided from MSD. 
+Artists do create songs, but sometimes there are many versions of those songs and it is hard to find the right one to compare them. Even if the song name is the same it could be modified. So in this case that explanation could fit. Another explanation is that either the first or the second dataset is simply flawed. Since both platforms are not comparable the data from the second platform, Tunebat could be rejected. Hence, we will restrict ourselves only to the data provided from MSD. 
 
 
-### Detailed comparrison
+### Detailed comparison
 
-Since it is not possible to take a closer look on dancability or hapiness of a song, provided by tunebat, we restricted ourselves to the MSD dataset and the provided information in that data. However this information can be be approached through variables in the MSD dataset. Our focus will be on 'artist_familiarity', 'artist_hotnesss', 'key' and 'tempo'. 
+Since it is not possible to take a closer look on danceability or happiness of a song, provided by Tunebat, we restricted ourselves to the MSD dataset and the provided information in that data. However this information can be accessed through variables in the MSD dataset. Our focus will be on 'artist_familiarity', 'artist_hotnesss', 'key' and 'tempo'. 
 
-The new strategie, since it is hard to compare the variables is, to take the prefered songs and the variables and to average them for further predictions and comparisons. First it would be nice to have a Barplot for each prefered song and each taken variable, as mentioned before.
+Since it is hard to compare these variables, our approach is to take the preferred songs and the variables and to average them for further predictions and comparisons. First it seems logical to have a Barplot for each preferred song and each chosen variable.
 ```{r MSDBarplots, warning = FALSE}
 # Overall Barplot function for any dataframe  
 crateBarplotOfFrame <- function(x,y, NameP, rownames = FALSE){
@@ -426,33 +430,33 @@ crateBarplotOfFrame(Meta_song,'artist_familiarity', SubPaths)
 crateBarplotOfFrame(Meta_song,'artist_hotttnesss', SubPaths)
 crateBarplotOfFrame(Analyze_song,'tempo', SubPaths)
 crateBarplotOfFrame(Analyze_song,'key', SubPaths)
-title('Barplots for choosen songs and variables', outer = TRUE, line = - 15)
+title('Barplots for chosen songs and variables', outer = TRUE, line = - 15)
 par(mfrow =c(1,1))
 }
 ```
 
-Now one can see directly the differences between each variable and each song. The given artist familiarity is quite similar. All artists are quite popular in 2010. This could also be a reason why one of our group members picked those songs. During that time he probably did go to a lot of discotheks and was probably listening a lot to this music. 
+Now, one can directly see the differences between each variable and each song. The given artist familiarity is quite similar. All chosen artists are quite popular in 2010. This could also be a reason why one of our group members picked those songs. During that time he probably listened radio a lot or went to clubs which were playing mainstream music, so there has to be a relation.
 
-The hotness however does vary a lot especially for kanye west which outrages all other artist. This could be attributable through a new single that he maybe published in this year and therefore got all the buzz.
+The hotness however does vary a lot especially for Kanye West which outrages all other artist. This could be attributable through a new single that he maybe published in this year and therefore got all the buzz.
 
-The tempo does also vary quite a lot and therefore it is hard to tell which tempo the listener prefers. He probably likes fast and happy songs more but also there is a more slower song. So he does listen to maybe sad music too. People listen to music to project their feelings on to it. This preferation could be used to profile the listener too. One could say that the listener mostly is a happy person but sometimes tends to be sad too.
+The tempo does also vary quite a lot and therefore it is hard to tell which tempo the listener prefers. He probably likes fast and happy songs but also there is a more slower song. So he does listen to sad music, too. People listen to music to project their feelings on to it. This preference could be used to profile the listener too. One could say that the listener mostly is a happy person but sometimes tends to be sad too. But such conclusions relate also to the human psychology and are not part of this work.
 
-The key in this case tends to be more in the higher sphere, what actually regards to the time the music was produced in. Since the 21th century music tend to be produced more Louder and mostly in G, which is a higher key.
+The key in this case tends to be more in the higher sphere, what actually relates to the time the music was produced in. Since the 21th century music tend to be produced more louder and mostly in G, which is a higher key.
 
 
 ### Spotify recommendation analysis
-Since we did not wanted to pick some random musicfiles, we created a playlist on Spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recommendation based on the actual playlist. We used this recommendation to get more interesting results for research purposes. However the used dataset did not provide all recommended music from spotify and we had to refresh the recommendations a couple of times to get the songs, which MSD contains. 
+Since we did not want to pick some random music files, we created a playlist on Spotify, which contained exactly the preference of one of our groups member. Luckily, Spotify provides recommendation based on the actual playlist. We used this recommendation to get more interesting results for research purposes. However the used dataset did not provide all recommended music from Spotify and we had to refresh the recommendations a couple of times to get the songs, which MSD contains. 
 
 Finaly we found three different songs, that MSD provides too.
 
 - Lady GaGa - Poker Face
 - Sean Paul - Baby Boy [feat. Beyonce]
-- Shakira Featuring Wyclef - Jean Hips Don't Lie (featuring Wyclef Jean)
+- Shakira Featuring Wyclef Jean - Hips Don't Lie (featuring Wyclef Jean)
 
-The goal now was to create an average of the prefered songs and variables and plot it together with the recommended songs.
+The goal now was to create an average of the preferred songs and variables and plot it together with the recommended songs.
 
 ```{r RecommendBoxplots, warning = FALSE}
-# create array with found Ids in beforehand containing prefered songs
+# create array with found Ids in beforehand containing preferred songs
 TrackIDs <- array(c('TRAZWGK128F93141E3','TRBDOVF128E0795641','TRAAKDG128F42A0ECB'))
 
 # find automaticaly all paths with names of trackIDs
@@ -488,22 +492,22 @@ crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'key',MSD_R, TRUE)
-title(main = 'Spotify recommended titles with average of prefered Songs', outer = TRUE, line = -15)
+title(main = 'Spotify recommended titles with average of preferred Songs', outer = TRUE, line = -15)
 par(mfrow = c(1,1))
 }
 ```
 
 Based on the results above one can do a very good prediction either to recommend or not to recommend those songs. 
 
-Starting with the familiarity it is obvious that all artists are quite popular but 'Sean Paul' and 'Shakira' tend to be closer to the average then 'Lady GaGa'. Therefore one would recommend either 'Sean Paul' or 'Shakira'. But based on only one variable it is hard to tell weather the result is a confident one. 
+Starting with the familiarity it is obvious that all artists are quite popular but 'Sean Paul' and 'Shakira' tend to be closer to the average than 'Lady GaGa'. Therefore, one would recommend either 'Sean Paul' or 'Shakira'. But based on only one variable it is hard to tell wether the result is a confident one. 
 
-So taking a look on hotness one can see that 'Sean Paul' and 'Shakira' are not as hot as 'Lady GaGa'. This could have many reasons. One could be regarding only this artists and the particular song, that the songs where released in 'Sean Paul' 2003,  'Shakira' 2006 and 'Lady GaGa' 2008. Therefore Lady GaGa has the most hotness and a very big buzz. Also one could asume, that 'Lady GaGa' did produce a new song and released it around 2010. The prediction for this variable would be 'Shakira'.
+So taking a look on hotness one can see that 'Sean Paul' and 'Shakira' are not as hot as 'Lady GaGa'. This could have many reasons. One could be regarding only these artists and the particular song, that the songs were released in 'Sean Paul' 2003,  'Shakira' 2006 and 'Lady GaGa' 2008. Therefore Lady GaGa has the most hotness and a very big buzz. Also one could assume, that 'Lady GaGa' did produce a new song and released it around 2010. The prediction for this variable would be 'Shakira'.
 
-The recommended songs tend to be more slow then the prefered ones. First one could assume that the songs are slower and therefore sadlier. This However can not be seen through a quantitative analysis and needs to be prooved either through a qualitative analysis or even through NLP and the written text. One could derive together with the text and the tempo the emotion of the song. looking at this variable one would also prefer 'Shakira'.
+The recommended songs tend to be more slow than the preferred ones. First one could assume that the songs are slower and therefore more sad. This However can not be seen through a quantitative analysis and needs to be proved either through a qualitative analysis or even through NLP and the written text. One could derive together with the text and the tempo the emotion of the song. Considering this variable one would also prefer 'Shakira'.
 
-because keys are distinct, there is no proper average in the sence of an actual mathematical average. The calculated average needs to be roundet up or down. In this case the average stays the same but with a remark to the actual one. So taking a closer look at this variable one would recommend to take 'Shakira' too.
+Because keys are distinct, there is no proper average in the sence of an actual mathematical average. The calculated average needs to be rounded. In this case the average stays the same but with a remark to the actual one. So taking a closer look at this variable one would recommend to take 'Shakira' too.
 
-To sum up the variables and make a first prediction. 'Shakira' and 'Sean Paul' tend to be very suitable for the listener and would be probably recommended. One should take 'Shakira' and'Sean Paul' first and 'Lady GaGa' second to recomd it to the listener. To be more accurate about this prediction, one should also assume to make a boxplot to see how confident the results are. This can be seen in the plot below.
+To sum up the variables and make a first prediction. 'Shakira' and 'Sean Paul' tend to be very suitable for the listener and probably would be recommended. One should take 'Shakira' and'Sean Paul' first and 'Lady GaGa' second to recommend it to the listener. To be more accurate about this prediction, one should also assume to make a boxplot to see how confident the results are. This can be seen in the plot below.
 
 ```{r Boxplot, warning = FALSE}
 crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
@@ -522,19 +526,19 @@ par(mfrow = c(1,1))
 }
 ```
 
-Since key is distinct, it was not ploted as a boxplot. So looking at the given boxplots one can see, that the assumptions for familiarity do not tend to be between 'Shakira' and 'Sean Paul' but only 'Sean Paul'. Whereas by looking at the hotness both would be recommended. Finally the tempo, where all the recommendations seemed to be outliers, all of the songs would be recommended.
+Since key is distinct, it was not plotted as a boxplot. So looking at the given boxplots one can see, that the assumptions for familiarity do not tend to be between 'Shakira' and 'Sean Paul' but only 'Sean Paul'. Whereas by looking at the hotness both would be recommended. Finally the tempo, where all the recommendations seemed to be outliers, all of the songs would be recommended.
 
-Summing up the boxplots above one will see that regarding to the barplots one can not fully understand the data but combined with the boxplots it gets more clear and the dataset is wrangled up more. The final recommendation according to the data would be 'Shakira' first, because she tends to fit more the average then the others, 'Sean Paul' second  and 'Lady GaGa' last.
+Summing up the boxplots above one will see that regarding to the barplots one can not fully understand the data, but combined with the boxplots it gets more clear and the dataset is wrangled up more. The final recommendation according to the data would be 'Shakira' first, because she tends to fit more the average than the others, 'Sean Paul' second  and 'Lady GaGa' last.
 
-But a proper recommendation based on this variables is still verry hard and we are not sure how confident this recommendation is. Therefore we would like to use some Data mining methods like PCA on timbre as well as the pitch.
+But a proper recommendation based on this variables is still very hard and we are not sure how confident this recommendation is. Therefore we would like to use some data mining methods like PCA on timbre as well as the pitch.
 
 ### PCA analysis
 
-The plot below shows the provided PCA for timbre in each song. Here we used only PC1 and PC2, since both do map the most variaty of the data. We hope for a good clustering that either could proove our assumption or give us some more detailes about the recommendation of those recommended songs.
+The plot below shows the provided PCA for timbre in each song. Here we used only PC1 and PC2, since both do map the most variance in the data. We hope for a good clustering that either could prove our assumption or give us some more details about the recommendation of those recommended songs.
 ```{r PCATimbre, warning = FALSE}
 #############################
 
-# averaged timbre of prefered songs
+# averaged timbre of preferred songs
 mean_timbre <- t(sapply(track_timbre, function(x){apply(x,1,mean)} ))
 
 # timbre recommended song
@@ -545,7 +549,7 @@ R_track_timbre <- apply(SubPaths,2,function(x){
 # recommended songs averaged
 R_mean_timbre <- t(sapply(R_track_timbre, function(x){apply(x,1,mean)} ))
 
-# plot of recommended timbre and prefered songs timbre
+# plot of recommended timbre and preferred songs timbre
 #par(mar=c(5,5,4,2))
 plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50), xlab = 'timbre PC1 =  average loudness of the segments averaged', ylab = 'timbre PC2 = brightness')
 text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
@@ -554,10 +558,10 @@ text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex=
 title(main = 'PCA timbre for recommended and preferden Songs')
 ```
 
-Looking at the plot one can recognize four different groups. But three of them tend to be more similar then the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recommend a song or to find similar songs in the dataset. Even if the timbre fits quite well it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe  Princiopal Components. Nevertheless for prooving our recommendation we take timbre as well as the pitch , where we calculate the Principal component and plot the first two too.
+Looking at the plot one can recognize four different groups. But three of them tend to be more similar than the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recommend a song or to find similar songs in the dataset. Even if the timbre fits quite well, it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe principal components. Nevertheless for proving our recommendation we take timbre as well as the pitch, where we calculate the principal component and plot the first two as well.
 
 ```{r PCAPitch, warning = FALSE}
-# averaged pitch of prefered songs
+# averaged pitch of preferred songs
 mean_pitch <- NULL
 for(i in names(track_pitch)){
   #pca
@@ -584,7 +588,7 @@ for(i in names(R_track_pitch)){
 }
 row.names(R_mean_pitch) <- names(R_track_pitch)
 
-# plot of recommended pitch and prefered songs pitch
+# plot of recommended pitch and preferred songs pitch
 par(mar=c(5,6,3,2))
 plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="" ,ylim = c(-6e-17,6e-17), xlim = c(-1.4e-16,5e-17))
 text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
@@ -593,7 +597,7 @@ points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
 
-The pitch PCA plot does provide even more groups as the timbre PCA. Also we can see, that both plots do have different results. When thinking about the ploted result one can describe why the pitch does have a different result then the timbre. The pitch does not give a good overview about the dataset it only depends on the key values, whereas timbre depends on the whole dataset.
+The pitch PCA plot does provide even more groups as the timbre PCA. Also we can see, that both plots do have different results. When thinking about the plotted result, one can describe why the pitch does have a different result than the timbre. The pitch does not give a good overview about the dataset it only depends on the key values, whereas timbre depends on the whole dataset.
 
 To sum up both results, pitch does not fit for this kind of task. Timbre PCA partly confirms the assumptions made in the sections before.
 
@@ -607,7 +611,9 @@ Even though our assumption may be right here, we should also perform a more thor
 
 Another difficulty we encountered is the visualization of abstract data such as our technical music data. It is not that intuitive to plot values like key or mode but of course it makes sense to compare these values between different songs.
 
-We reached our goal, to find some similarities in preferred songs and based on those recommend some other songs. Even though we used Spotify for getting recommended songs, to be not picking randomly songs out of the dataset that with a very high probability would not fit, because most of the songs are from the 1940's, 1950's and 1960's.
+Finally, the dataset is very exciting and consists of a lot of technical information for a lot of different music styles. Therefore, there are possibilies for many more approaches and kinds of analysis. As mentioned above, one could also focus on the psychological analysis why people tend to listen to specific types of music and analyze this question with respect to the technical characteristics of the different music types.
+
+In the end, we reached our goal to find some similarities in preferred songs and based on those recommend some other songs. Even though we used Spotify for getting recommended songs, to be not picking randomly songs out of the dataset that with a very high probability would not fit, because most of the songs are from the 1940's, 1950's and 1960's.
 
 Like mentioned before we should continue to analyses the technical characteristics of music to find correlation between similar songs for recommendation purposes. However, our results seem promising in this regard.
 
