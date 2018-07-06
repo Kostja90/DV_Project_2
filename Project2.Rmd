@@ -286,9 +286,8 @@ Variables: <br \>
 <br \>
 - Segment Timbre: Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notation also referred to as sound color, texture, or tone quality [^înfo2]. The Echo Nest Analyzer’s timbre feature is a vector that includes 12 unbounded values roughly centered around 0. This is represented as 12-dimensional vectors that are the principal components of Mel-frequency cepstral co- efficients (MFCCs). They represent the power spectrum of sound, and are derived from Fourier analysis and further processing [^doku4]. For completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc [^înfo2]. <br \>
 
-- artist familiarity
-
-- artist hotness
+- artist familiarity: Familiarity is an indication of how well known the artist is in 2010. [^famHot1]
+- artist hotness: Hotness (which is spelled as the zoolanderish ‘hotttnesss’) is an indication of how much buzz the artist is getting  in 2010. [^famHot1]
 
 [^wiki3]: https://en.wikipedia.org/wiki/Beat_(music) page view [04.07.18]
 [^înfo1]: https://www.rhythm-in-music.com/introduction-beat-and-tempo.html page view [04.07.18]
@@ -299,6 +298,7 @@ Variables: <br \>
 [^wiki5]: https://en.wikipedia.org/wiki/Bar_(music) page view [04.07.18]
 [^info4]: https://www.britannica.com/art/pitch-music page view [04.07.18]
 [^doku4]: http://www.ee.columbia.edu/~dliang/files/FINAL.pdf page view [06.07.18]
+[^famHot1]: https://musicmachinery.com/2009/05/25/artist-similarity-familiarity-and-hotness/ page view [06.07.18]
 
 ### Describing relations between the variables
 
@@ -425,7 +425,25 @@ par(mfrow =c(1,1))
 }
 ```
 
-Now one can see directly the differences between each variable an deach song. The given artist familiarity
+Now one can see directly the differences between each variable and each song. The given artist familiarity is quite similar. All artists are quite popular in 2010. This could also be a reason why one of our group members picked those songs. During that time he probably did go to a lot of discotheks and was probably listening a lot to this music. 
+
+The hotness however does vary a lot especially for kanye west which outrages all other artist. This could be attributable through a new single that he maybe published in this year and therefore got all the buzz.
+
+The tempo does also vary quite a lot and therefore it is hard to tell which tempo the listener prefers. He probably likes fast and happy songs more but also there is a more slower song. So he does listen to maybe sad music too. People listen to music to project their feelings on to it. This preferation could be used to profile the listener too. One could say that the listener mostly is a happy person but sometimes tends to be sad too.
+
+The key in this case tends to be more in the higher sphere, what actually regards to the time the music was produced in. Since the 21th century music tend to be produced more Louder and mostly in G, which is a higher key.
+
+
+### Spotify recomendation analysis
+Since we did not wanted to pick some random musicfiles, we created a playlist on spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recomendation based on the actual playlist. We used this recomendation to get more interesting results for research purposes. However the used dataset did not provide all recomended music from spotify and we had to refresh the recomendations a couple of times to get the songs, which MSD contains. 
+
+Finaly we found three different songs, that MSD provides too.
+
+- Lady GaGa - Poker Face
+- Sean Paul - Baby Boy [feat. Beyonce]
+- Shakira Featuring Wyclef - Jean Hips Don't Lie (featuring Wyclef Jean)
+
+The goal now was to create an average of the prefered songs and variables and plot it together with the recomended songs.
 
 ```{r RecomendBoxplots, warning = FALSE}
 # create array with found Ids in beforehand containing prefered songs
@@ -463,11 +481,23 @@ par(mfrow = c(2,2))
 crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
-crateBarplotOfFrame(R_Analyze_song,'key', SubPaths)
+crateBarplotOfFrame(MSD_R,'key',MSD_R, TRUE)
 title(main = 'Spotify recomended titles with average of prefered Songs', outer = TRUE, line = -15)
 par(mfrow = c(1,1))
 }
 ```
+
+Based on the results above one can do a very good prediction either to recomend or not to recomend those songs. 
+
+Starting with the familiarity it is obvious that all artists are quite popular but 'Sean Paul' and 'Shakira' tend to be closer to the average then 'Lady GaGa'. Therefore one would recomend either 'Sean Paul' or 'Shakira'. But based on only one variable it is hard to tell weather the result is a confident one. 
+
+So taking a look on hotness one can see that 'Sean Paul' and 'Shakira' are not as hot as 'Lady GaGa'. This could have many reasons. One could be regarding only this artists and the particular song, that the songs where released in 'Sean Paul' 2003,  'Shakira' 2006 and 'Lady GaGa' 2008. Therefore Lady GaGa has the most hotness and a very big buzz. Also one could asume, that 'Lady GaGa' did produce a new song and released it around 2010. The prediction for this variable would be 'Shakira'.
+
+The recomended songs tend to be more slow then the prefered ones. First one could assume that the songs are slower and therefore sadlier. This However can not be seen through a quantitative analysis and needs to be prooved either through a qualitative analysis or even through NLP and the written text. One could derive together with the text and the tempo the emotion of the song. looking at this variable one would also prefer 'Shakira'.
+
+because keys are distinct, there is no proper average in the sence of an actual mathematical average. The calculated average needs to be roundet up or down. In this case the average stays the same but with a remark to the actual one. So taking a closer look at this variable one would recomend to take 'Shakira' too.
+
+To sum up the variables and make a first prediction. 'Shakira' and 'Sean Paul' tend to be very suitable for the listener and would be probably recomended. One should take 'Shakira' and'Sean Paul' first and 'Lady GaGa' second to recomd it to the listener. To be more accurate about this prediction, one should also assume to make a boxplot to see how confident the results are. This can be seen in the plot below.
 
 ```{r Boxplot, warning = FALSE}
 crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
@@ -486,7 +516,15 @@ par(mfrow = c(1,1))
 }
 ```
 
+Since key is distinct, it was not ploted as a boxplot. So looking at the given boxplots one can see, that the assumptions for familiarity do not tend to be between 'Shakira' and 'Sean Paul' but only 'Sean Paul'. Whereas by looking at the hotness both would be recomended. Finally the tempo, where all the recomendations seemed to be outliers, all of the songs would be recomended.
 
+Summing up the boxplots above one will see that regarding to the barplots one can not fully understand the data but combined with the boxplots it gets more clear and the dataset is wrangled up more. The final recomendation according to the data would be 'Shakira' first, because she tends to fit more the average then the others, 'Sean Paul' second  and 'Lady GaGa' last.
+
+But a proper recomendation based on this variables is still verry hard and we are not sure how confident this recomendation is. Therefore we would like to use some Data mining methods like PCA on timbre as well as the pitch.
+
+### PCA analysis
+
+The plot below shows the provided PCA for timbre in each song. Here we used only PC1 and PC2, since both do map the most variaty of the data. We hope for a good clustering that either could proove our assumption or give us some more detailes about the recomendation of those recomended songs.
 ```{r PCATimbre, warning = FALSE}
 #############################
 
@@ -509,6 +547,8 @@ points(R_mean_timbre[,1], R_mean_timbre[,2], pch=21,  bg="lightgreen")
 text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex= 0.7, pos=3)
 title(main = 'PCA timbre for recomended and preferden Songs')
 ```
+
+Looking at the plot one can recognize four different groups. But three of them tend to be more similar then the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recomend a song or to find similar songs in the dataset. Even if the timbre fits quite well it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe  Princiopal Components. Nevertheless for prooving our recomendation we take timbre as well as the pitch , where we calculate the Principal component and plot the first two too.
 
 ```{r PCAPitch, warning = FALSE}
 # averaged pitch of prefered songs
@@ -546,14 +586,10 @@ title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recomended and preferden Song
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
-
+The pitch PCA plot does provide even more groups as the tinbre PCA. Also we can see, that both plot do have different re
 
 
 # Conclusion
-
-
-The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example-track-description
-
 
 - Nehme eine Menge an Songs die uns gut gefallen schau sie dir an 
 - nehme eine weiter menge vergleiche diese miteinander und höre sie dir an und gib dein final ergebnis 
@@ -563,6 +599,8 @@ The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example
 european map limits to draw with R: http://www.milanor.net/blog/maps-in-r-introduction-drawing-the-map-of-europe/
 
 comparison site: https://tunebat.com/
+
+The H5 data explained: https://labrosa.ee.columbia.edu/millionsong/pages/example-track-description
 
 research: 
 
