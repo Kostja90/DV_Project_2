@@ -11,7 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd('/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/DV_Project_2/')
+setwd('/home/irza/DV_Project_2')
 ```
 
 # Introduction
@@ -216,7 +216,7 @@ library(rhdf5) # required for H5 files
 # pathToSet <- tk_choose.dir(default = "", caption = "Select directory")
 
 # set a hardcoded Path to the MillionSongSubset
-pathToSet = '/Users/Kostja/Desktop/Master/Sem 2 (18 SoSe)/Data Visualization/Tasks/MillionSongSubset'
+pathToSet = '/media/irza/BBox/MillionSongSubset'
 
 # create array with found Ids in beforehand containing preferred songs
 TrackIDs <- array(c('TRAPZTV128F92CAA4E','TRANNZZ128F92C22F7','TRAQZQX128F931338F','TRALONM128EF35A199','TRAWBHE12903CBC4CB'))
@@ -551,11 +551,11 @@ R_mean_timbre <- t(sapply(R_track_timbre, function(x){apply(x,1,mean)} ))
 
 # plot of recommended timbre and preferred songs timbre
 #par(mar=c(5,5,4,2))
-plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50), xlab = 'timbre PC1 =  average loudness of the segments averaged', ylab = 'timbre PC2 = brightness')
+plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50), xlab = 'PC1', ylab = 'PC2')
 text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
 points(R_mean_timbre[,1], R_mean_timbre[,2], pch=21,  bg="lightgreen")
 text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex= 0.7, pos=3)
-title(main = 'PCA timbre for recommended and preferden Songs')
+title(main = 'PCA timbre for recommended and playlist Songs')
 ```
 
 Looking at the plot one can recognize four different groups. But three of them tend to be more similar than the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recommend a song or to find similar songs in the dataset. Even if the timbre fits quite well, it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe principal components. Nevertheless for proving our recommendation we take timbre as well as the pitch, where we calculate the principal component and plot the first two as well.
@@ -592,7 +592,7 @@ row.names(R_mean_pitch) <- names(R_track_pitch)
 par(mar=c(5,6,3,2))
 plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="" ,ylim = c(-6e-17,6e-17), xlim = c(-1.4e-16,5e-17))
 text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
-title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recommended and preferden Songs')
+title(xlab="PC1",ylab="PC2", main = 'PCA pitch for recommended and playlist Songs')
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
