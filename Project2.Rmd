@@ -3,13 +3,12 @@ title: "Project 2"
 author: "Arthur Gogohia, Dion Refiano, Konstantin Shuxtelinsky"
 date: "26/05/2018"
 output: 
-  pdf_document
-
----
-html_document:
+  html_document:
     toc: true
     number_sections: false
     code_folding: hide
+---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 <<<<<<< HEAD
