@@ -441,7 +441,7 @@ The key in this case tends to be more in the higher sphere, what actually regard
 
 
 ### Spotify recommendation analysis
-Since we did not wanted to pick some random musicfiles, we created a playlist on Spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recomendation based on the actual playlist. We used this recommendation to get more interesting results for research purposes. However the used dataset did not provide all recomended music from spotify and we had to refresh the recomendations a couple of times to get the songs, which MSD contains. 
+Since we did not wanted to pick some random musicfiles, we created a playlist on Spotify, which contained exactly the preferation of one of our groups member. Luckily Spotify provides some recommendation based on the actual playlist. We used this recommendation to get more interesting results for research purposes. However the used dataset did not provide all recommended music from spotify and we had to refresh the recommendations a couple of times to get the songs, which MSD contains. 
 
 Finaly we found three different songs, that MSD provides too.
 
@@ -449,9 +449,9 @@ Finaly we found three different songs, that MSD provides too.
 - Sean Paul - Baby Boy [feat. Beyonce]
 - Shakira Featuring Wyclef - Jean Hips Don't Lie (featuring Wyclef Jean)
 
-The goal now was to create an average of the prefered songs and variables and plot it together with the recomended songs.
+The goal now was to create an average of the prefered songs and variables and plot it together with the recommended songs.
 
-```{r RecomendBoxplots, warning = FALSE}
+```{r RecommendBoxplots, warning = FALSE}
 # create array with found Ids in beforehand containing prefered songs
 TrackIDs <- array(c('TRAZWGK128F93141E3','TRBDOVF128E0795641','TRAAKDG128F42A0ECB'))
 
@@ -488,22 +488,22 @@ crateBarplotOfFrame(MSD_R,'artist_familiarity', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'artist_hotttnesss', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'tempo', MSD_R, TRUE)
 crateBarplotOfFrame(MSD_R,'key',MSD_R, TRUE)
-title(main = 'Spotify recomended titles with average of prefered Songs', outer = TRUE, line = -15)
+title(main = 'Spotify recommended titles with average of prefered Songs', outer = TRUE, line = -15)
 par(mfrow = c(1,1))
 }
 ```
 
-Based on the results above one can do a very good prediction either to recomend or not to recomend those songs. 
+Based on the results above one can do a very good prediction either to recommend or not to recommend those songs. 
 
-Starting with the familiarity it is obvious that all artists are quite popular but 'Sean Paul' and 'Shakira' tend to be closer to the average then 'Lady GaGa'. Therefore one would recomend either 'Sean Paul' or 'Shakira'. But based on only one variable it is hard to tell weather the result is a confident one. 
+Starting with the familiarity it is obvious that all artists are quite popular but 'Sean Paul' and 'Shakira' tend to be closer to the average then 'Lady GaGa'. Therefore one would recommend either 'Sean Paul' or 'Shakira'. But based on only one variable it is hard to tell weather the result is a confident one. 
 
 So taking a look on hotness one can see that 'Sean Paul' and 'Shakira' are not as hot as 'Lady GaGa'. This could have many reasons. One could be regarding only this artists and the particular song, that the songs where released in 'Sean Paul' 2003,  'Shakira' 2006 and 'Lady GaGa' 2008. Therefore Lady GaGa has the most hotness and a very big buzz. Also one could asume, that 'Lady GaGa' did produce a new song and released it around 2010. The prediction for this variable would be 'Shakira'.
 
-The recomended songs tend to be more slow then the prefered ones. First one could assume that the songs are slower and therefore sadlier. This However can not be seen through a quantitative analysis and needs to be prooved either through a qualitative analysis or even through NLP and the written text. One could derive together with the text and the tempo the emotion of the song. looking at this variable one would also prefer 'Shakira'.
+The recommended songs tend to be more slow then the prefered ones. First one could assume that the songs are slower and therefore sadlier. This However can not be seen through a quantitative analysis and needs to be prooved either through a qualitative analysis or even through NLP and the written text. One could derive together with the text and the tempo the emotion of the song. looking at this variable one would also prefer 'Shakira'.
 
-because keys are distinct, there is no proper average in the sence of an actual mathematical average. The calculated average needs to be roundet up or down. In this case the average stays the same but with a remark to the actual one. So taking a closer look at this variable one would recomend to take 'Shakira' too.
+because keys are distinct, there is no proper average in the sence of an actual mathematical average. The calculated average needs to be roundet up or down. In this case the average stays the same but with a remark to the actual one. So taking a closer look at this variable one would recommend to take 'Shakira' too.
 
-To sum up the variables and make a first prediction. 'Shakira' and 'Sean Paul' tend to be very suitable for the listener and would be probably recomended. One should take 'Shakira' and'Sean Paul' first and 'Lady GaGa' second to recomd it to the listener. To be more accurate about this prediction, one should also assume to make a boxplot to see how confident the results are. This can be seen in the plot below.
+To sum up the variables and make a first prediction. 'Shakira' and 'Sean Paul' tend to be very suitable for the listener and would be probably recommended. One should take 'Shakira' and'Sean Paul' first and 'Lady GaGa' second to recomd it to the listener. To be more accurate about this prediction, one should also assume to make a boxplot to see how confident the results are. This can be seen in the plot below.
 
 ```{r Boxplot, warning = FALSE}
 crateBoxplotOfFrame <- function(x,y,xDerive, limStart = 0, limEnd = 1){
@@ -522,15 +522,15 @@ par(mfrow = c(1,1))
 }
 ```
 
-Since key is distinct, it was not ploted as a boxplot. So looking at the given boxplots one can see, that the assumptions for familiarity do not tend to be between 'Shakira' and 'Sean Paul' but only 'Sean Paul'. Whereas by looking at the hotness both would be recomended. Finally the tempo, where all the recomendations seemed to be outliers, all of the songs would be recomended.
+Since key is distinct, it was not ploted as a boxplot. So looking at the given boxplots one can see, that the assumptions for familiarity do not tend to be between 'Shakira' and 'Sean Paul' but only 'Sean Paul'. Whereas by looking at the hotness both would be recommended. Finally the tempo, where all the recommendations seemed to be outliers, all of the songs would be recommended.
 
-Summing up the boxplots above one will see that regarding to the barplots one can not fully understand the data but combined with the boxplots it gets more clear and the dataset is wrangled up more. The final recomendation according to the data would be 'Shakira' first, because she tends to fit more the average then the others, 'Sean Paul' second  and 'Lady GaGa' last.
+Summing up the boxplots above one will see that regarding to the barplots one can not fully understand the data but combined with the boxplots it gets more clear and the dataset is wrangled up more. The final recommendation according to the data would be 'Shakira' first, because she tends to fit more the average then the others, 'Sean Paul' second  and 'Lady GaGa' last.
 
-But a proper recomendation based on this variables is still verry hard and we are not sure how confident this recomendation is. Therefore we would like to use some Data mining methods like PCA on timbre as well as the pitch.
+But a proper recommendation based on this variables is still verry hard and we are not sure how confident this recommendation is. Therefore we would like to use some Data mining methods like PCA on timbre as well as the pitch.
 
 ### PCA analysis
 
-The plot below shows the provided PCA for timbre in each song. Here we used only PC1 and PC2, since both do map the most variaty of the data. We hope for a good clustering that either could proove our assumption or give us some more detailes about the recomendation of those recomended songs.
+The plot below shows the provided PCA for timbre in each song. Here we used only PC1 and PC2, since both do map the most variaty of the data. We hope for a good clustering that either could proove our assumption or give us some more detailes about the recommendation of those recommended songs.
 ```{r PCATimbre, warning = FALSE}
 #############################
 
@@ -542,19 +542,19 @@ R_track_timbre <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/segments_timbre")
 })
 
-# recomended songs averaged
+# recommended songs averaged
 R_mean_timbre <- t(sapply(R_track_timbre, function(x){apply(x,1,mean)} ))
 
-# plot of recomended timbre and prefered songs timbre
+# plot of recommended timbre and prefered songs timbre
 #par(mar=c(5,5,4,2))
 plot(mean_timbre[,1], mean_timbre[,2], ylim=c(-50,50), xlim=c(35,50), xlab = 'timbre PC1 =  average loudness of the segments averaged', ylab = 'timbre PC2 = brightness')
 text(mean_timbre[,1], mean_timbre[,2], labels=row.names(mean_timbre), cex= 0.7, pos=3)
 points(R_mean_timbre[,1], R_mean_timbre[,2], pch=21,  bg="lightgreen")
 text(R_mean_timbre[,1], R_mean_timbre[,2], labels=row.names(R_mean_timbre), cex= 0.7, pos=3)
-title(main = 'PCA timbre for recomended and preferden Songs')
+title(main = 'PCA timbre for recommended and preferden Songs')
 ```
 
-Looking at the plot one can recognize four different groups. But three of them tend to be more similar then the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recomend a song or to find similar songs in the dataset. Even if the timbre fits quite well it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe  Princiopal Components. Nevertheless for prooving our recomendation we take timbre as well as the pitch , where we calculate the Principal component and plot the first two too.
+Looking at the plot one can recognize four different groups. But three of them tend to be more similar then the fourth. Since timbre gives a good overview of the whole dataset and the musical mood. It is quite good to use, when trying to recommend a song or to find similar songs in the dataset. Even if the timbre fits quite well it is hard to read and understand, because it consists out of 12 x N observations and the 12 observations describe  Princiopal Components. Nevertheless for prooving our recommendation we take timbre as well as the pitch , where we calculate the Principal component and plot the first two too.
 
 ```{r PCAPitch, warning = FALSE}
 # averaged pitch of prefered songs
@@ -573,7 +573,7 @@ R_track_pitch <- apply(SubPaths,2,function(x){
   h5read(x,"/analysis/segments_pitches")
 })
 
-# averaged pitch of recomended songs
+# averaged pitch of recommended songs
 R_mean_pitch <- NULL
 for(i in names(R_track_pitch)){
   #pca
@@ -584,11 +584,11 @@ for(i in names(R_track_pitch)){
 }
 row.names(R_mean_pitch) <- names(R_track_pitch)
 
-# plot of recomended pitch and prefered songs pitch
+# plot of recommended pitch and prefered songs pitch
 par(mar=c(5,6,3,2))
 plot(mean_pitch[,1], mean_pitch[,2], ylab="", xlab="" ,ylim = c(-6e-17,6e-17), xlim = c(-1.4e-16,5e-17))
 text(mean_pitch[,1], mean_pitch[,2], labels=row.names(mean_pitch), cex= 0.7, pos=3)
-title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recomended and preferden Songs')
+title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recommended and preferden Songs')
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
@@ -598,13 +598,18 @@ The pitch PCA plot does provide even more groups as the timbre PCA. Also we can 
 To sum up both results, pitch does not fit for this kind of task. Timbre PCA partly confirms the assumptions made in the sections before.
 
 # Conclusion
-To conclude the whole results, one should listen to the recommended songs and make a qualitative analysis and state if this individual indeed likes the recommendended songs. 
+To conclude the whole results, one should listen to the recommended songs and make a qualitative analysis and state if this individual indeed likes these songs. 
 
 In this final analysis it turned out that the listener truly likes the music recommended by Spotify. Therefore, the assumptions made by the bar- and boxplots where quite good and could be used for recommending further music to the listener. 
-Besides the bar- and the boxplots, we even found a more profound way of finding smililar songs. We plotted the timbre PCA and found recommended music in the same region plotted as our chosen music.  This assumption would be even better, since it recomended as well 'Shakira' as well as 'Sean Paul', whereas the other assumption did a grading. 
+Besides the bar- and the boxplots, we even found a more profound way of finding smililar songs. We plotted the timbre PCA and found recommended music in the same region plotted as our chosen music. These results combined with the positive qualitative analysis shows that we were right with our assumption to recommend songs on the basics of their technical characteristics.
 
-We reached our goal, to find some similarities in prefered songs and based on those recomend some other songs. Even though we used Spotify for getting recomended songs, to be not picking randomly songs out of the dataset that with a very high probability wont fit. Because mostly the songs are from the 1940's, 1950's and 1960's.
+Even though our assumption may be right here, we should also perform a more thorough analysis on the data. We experienced some drawbacks with the use of Spotify to find similar songs since our dataset is from 2011 and Spotify recommended songs which were released later.
 
+Another difficulty we encountered is the visualization of abstract data such as our technical music data. It is not that intuitive to plot values like key or mode but of course it makes sense to compare these values between different songs.
+
+We reached our goal, to find some similarities in preferred songs and based on those recommend some other songs. Even though we used Spotify for getting recommended songs, to be not picking randomly songs out of the dataset that with a very high probability would not fit, because most of the songs are from the 1940's, 1950's and 1960's.
+
+Like mentioned before we should continue to analyses the technical characteristics of music to find correlation between similar songs for recommendation purposes. However, our results seem promising in this regard.
 
 
 # Sources and Footnotes
