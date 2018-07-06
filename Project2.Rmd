@@ -586,13 +586,19 @@ title(xlab="pc1",ylab="pc2", main = 'PCA pitch for recomended and preferden Song
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
 ```
-The pitch PCA plot does provide even more groups as the tinbre PCA. Also we can see, that both plot do have different re
 
+The pitch PCA plot does provide even more groups as the tinbre PCA. Also we can see, that both plots do have different results. When thinking about the ploted result one can describe why the pitch does have a different result then the timbre. The pitch does not give a good overview about the dataset it only depends on the key values, whereas timbre depends on the whole dataset.
+
+To sum up both results, pitch does not fit for this kind of task. Timbre PCA partly confirms the assumptions made in the sections before.
 
 # Conclusion
+To Conclude the whole results, the listener should listen to the recomended songs and make a qualitative analysis. 
 
-- Nehme eine Menge an Songs die uns gut gefallen schau sie dir an 
-- nehme eine weiter menge vergleiche diese miteinander und höre sie dir an und gib dein final ergebnis 
+After doing so, the listener came to the exactly same result as recomended. Therefore the assumptions made by the bar- and boxplots where quite good and could be used for recomending more music to the listener. Of course one could also use the timbre to recomend the music. This assumption would be even better, since it recomended as well 'Shakira' as well as 'Sean Paul', whereas the other assumption did a grading. 
+
+We reached our goal, to find some similarities in prefered songs and based on those recomend some other songs. Even though we used Spotify for getting recomended songs, to be not picking randomly songs out of the dataset that with a very high probability wont fit. Because mostly the songs are from the 1940's, 1950's and 1960's.
+
+
 
 # Sources and Footnotes
 

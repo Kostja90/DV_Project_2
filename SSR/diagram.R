@@ -98,10 +98,10 @@ par(mar=c(1,1,1,1))
 #h5ls(toString(SubPaths$bruno[[1]]))
 #H5close()
 
+artist$beyonce
 mb_tags <- apply(SubPaths,2,function(x){
   h5read(x,"/musicbrainz/artist_mbtags")
 })
-
 
 #create barchart MSD
 par(las=2) # make label text perpendicular to axis
@@ -194,7 +194,7 @@ barplot(MSD_R$artist_hotttnesss, main="artist hotness", col =1:5, horiz=TRUE, na
 
 barplot(MSD_R$tempo, main="tempo", col =1:5, horiz=TRUE, names.arg=row.names(MSD_R), cex.names=0.8)
 
-barplot(R_Analyze_song$key, main="key", col =1:5, horiz=TRUE, names.arg=names(R_SubPaths), cex.names=0.8)
+barplot(R_Analyze_song$key, main="key", col =1:5, horiz=TRUE, names.arg=names(SubPaths), cex.names=0.8)
 
 barplot(R_Analyze_song$mode, main="mode", col =1:5, horiz=TRUE, names.arg=names(R_SubPaths), cex.names=0.8)
 
@@ -361,6 +361,79 @@ par(mar=c(5,5,4,2))
 row.names(R_mean_pitch) <- names(R_track_pitch)
 points(R_mean_pitch[,1], R_mean_pitch[,2], pch=21,  bg="lightgreen")
 text(R_mean_pitch[,1], R_mean_pitch[,2], labels=row.names(R_mean_pitch), cex= 0.7, pos=3)
+
+
+
+```{r}
+# # library(fmsb)
+# # Tune_Beyance
+# # Tune_Justin <- c(,,76,,-5,8)
+# # Tune_Kanye
+# # Tune_Bruno
+# # Tune_Madonna
+# 
+# loudness_start <- apply(SubPaths,2,function(x){
+#   h5read(x,"/analysis/segments_loudness_start")
+# })
+# 
+# loudness_max <- apply(SubPaths,2,function(x){
+#   h5read(x,"/analysis/segments_loudness_max")
+# })
+# 
+# par(mfrow= c(1,2))
+# boxplot(loudness_start, main = 'loudness_start' )
+# boxplot(loudness_max, main = 'loudness_max' )
+# mtext('Boxplots of loudness', outer = TRUE, side = 3, line = -1)
+# par(mfrow= c(1,1))
+# 
+# 
+# Draw_matrix_plots <- function(plt){
+#   layout(matrix(c(1,1,2,2,3,3,0,4,4,5,5,0), 2, byrow = TRUE), heights=c(2,2))
+#   c <- 0
+#   invisible(lapply(plt,function(x){
+#   c <<- c+1
+#   plot(x,type = 'l', axes = FALSE, xlab = '', ylab = '', main = names(plt)[c])
+#   axis(2)
+#   axis(1)
+#   }))
+#   mtext(paste('Plot', deparse(substitute(plt)),'for different interprets' ), side = 3, line = -19, outer = TRUE)
+#   par(mfrow=c(1,1))
+# }
+# 
+# Draw_matrix_plots(loudness_start)
+# 
+# Draw_matrix_plots(loudness_max)
+# 
+# matplot_Draw <- function(plt){
+#   dFrame <- do.call(cbind, plt)
+#   matplot(dFrame,type = "l", col = 1:dim(dFrame)[2], ylab = "loudness", xlab = 'segmentstep', main = paste('matplot', deparse(substitute(plt))))
+#   legend("topleft", legend = names(plt), col = 1:dim(dFrame)[2], pch = 16)
+# }
+# 
+# matplot_Draw(loudness_start)
+# 
+# matplot_Draw(loudness_max)
+# 
+# ```
+# 
+# 
+# ```{r}
+# 
+# # nicht sicher mit dem hier 
+# Analyze_pitch <- apply(SubPaths,2,function(x){
+#   h5read(x,"/analysis/segments_pitches")
+# })
+# boxplot(Analyze_pitch)
+# 
+# 
+# Analyze_timbre <- apply(SubPaths,2,function(x){
+#   h5read(x,"/analysis/segments_timbre")
+# })
+# 
+# boxplot(Analyze_timbre)
+# 
+```
+
 
 
 
